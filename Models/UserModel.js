@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const {RegistrationSchema} = require('./RegistrationModel')
-const {CourseSchema} = require('./CourseModel')
 
 const UserSchema = mongoose.Schema({
   userId: {
