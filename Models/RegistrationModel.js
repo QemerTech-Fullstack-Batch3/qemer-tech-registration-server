@@ -28,4 +28,4 @@ const RegistrationSchema = mongoose.Schema({
 
 const Registration = mongoose.model("Registration", RegistrationSchema)
 
-module.exports = Registration
+module.exports = {RegistrationSchema, Registration}

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 
+const {RegistrationSchema} = require('./RegistrationModel')
+const {CourseSchema} = require('./CourseModel')
+
 const UserSchema = mongoose.Schema({
   userId: {
     type: String,
@@ -23,14 +26,11 @@ const UserSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Admin','Student','Instructor'],
+    enum: ['Admin','Student'],
     default: "Student",
     required: true,
   },
-  reqDate: {
-    type: Date,
-    default: Date.now
-  },
+  registration: [RegistrationSchema],
   learningMode: {
     type: String,
     enum: ["Online", "InPerson"]
