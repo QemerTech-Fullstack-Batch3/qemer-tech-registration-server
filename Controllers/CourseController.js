@@ -1,7 +1,6 @@
 const Course = require('../Models/CourseModel')
 
 exports.CreateCourse = async (req, res) => {
-  
 }
 exports.GetCourses = async (req, res) => {
   try {
