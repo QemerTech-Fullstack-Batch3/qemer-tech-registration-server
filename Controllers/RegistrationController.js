@@ -27,5 +27,5 @@ exports.Register = async (req, res) => {
 }
 
 exports.RegisterForCourse = async (req, res) => {
-  
+  const {courseId, learningMode} = req.body
 }
