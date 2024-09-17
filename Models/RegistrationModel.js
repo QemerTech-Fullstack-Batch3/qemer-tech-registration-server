@@ -1,10 +1,6 @@
 const mongoose = require('mongoose')
 
 const RegistrationSchema = mongoose.Schema({
-  studentId: {
-    type: String,
-    required: true 
-  },
   courseId: {
     type: String,
     required: true 
