@@ -1,0 +1,14 @@
+POST http://localhost:5000/course/createcourse
+Content-Type: application/json
+
+{
+  "courseName":"Web Dev",
+  "duration":"6 month",
+  "description":"this",
+  "price": 6000,
+  "schedule":"Mon/Wed/Fri"
+}
+
+###
+
+GET http://localhost:5000/course/getcourses
