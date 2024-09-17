@@ -37,6 +37,7 @@ const RegistrationSchema = mongoose.Schema({
   },
   learningMode: {
     type: String,
+    enum: ["Online","InPerson"],
     required: true 
   },
 }, { timestamps: true })
