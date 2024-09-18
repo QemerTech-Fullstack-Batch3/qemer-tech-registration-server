@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 
 const ScheduleSchema = mongoose.Schema({
   courseId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
     required: true 
   },
   startDate: {
@@ -26,7 +27,8 @@ const ScheduleSchema = mongoose.Schema({
   },
   time: {
     type: String,
-    required: true 
+    required: true,
+    match: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
   },
 }, { timestamps: true })
 
