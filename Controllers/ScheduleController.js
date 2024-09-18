@@ -16,12 +16,23 @@ exports.CreateSchedule = async (req, res) => {
   try {
     const { courseId, startDate, endDate, dayOfWeek, time } = req.body
 
-    const course = await Course.findById(courseId)
+    // course check
+    const courseIdObj = mongoose.Types.ObjectId(courseId);
+    const course = await Course.findById(courseIdObj)
     if (!course) return res.status(404).send("Course not found")
-
     const courseInSchedule = await Schedule.findById(courseId)
     if (courseInSchedule) return res.send("This course already have a schedule.")
 
+    // start and end date check
+    const startDateEdit = new Date(startDate)
+    const endDateEdit = new Date(endDate)
+    if(isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())){
+      return res.status(400).send("Invalid start or end date");
+    }
+    if (endDate <= startDate) {
+      return res.status(400).send("End date must be after start date");
+    }
+    // dayofweek check
     if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
       return res.status(400).send("At least one day of the week is required");
     }
@@ -29,10 +40,15 @@ exports.CreateSchedule = async (req, res) => {
       return res.status(400).send("Invalid dayOfWeek value");
     }
 
+    // time
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (!timeRegex.test(time)) {
+      return res.status(400).send("Invalid time format");
+    }
     const schedule = new Schedule({
-      courseId,
-      startDate,
-      endDate,
+      courseId: courseIdObj,
+      startDate: startDateEdit,
+      endDate: endDateEdit,
       dayOfWeek,
       time
     })
@@ -44,7 +60,15 @@ exports.CreateSchedule = async (req, res) => {
 }
 exports.GetSchedule = async (req, res) => {
   try {
+    const schedule = await Schedule.findById(req.params.id);
 
+    // Convert dayOfWeek numbers to strings
+    const formattedSchedule = {
+      ...schedule.toObject(),
+      dayOfWeek: schedule.dayOfWeek.map(dayNumber => daysOfWeekMap[dayNumber]),
+    };
+
+    res.status(200).json(formattedSchedule);
   } catch (error) {
     console.error("Error fetching schedule: ", error)
     res.status(500).send("An error occured while getting schedule")

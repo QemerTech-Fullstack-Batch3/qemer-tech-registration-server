@@ -16,6 +16,7 @@ exports.GetCourses = async (req, res) => {
     const courses = await Course.find()
     res.status(200).send(courses)
   } catch (error) {
+    console.error('Error fetching courses:', error)
     res.status(501).send(error)
   }
 }

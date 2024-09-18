@@ -1,0 +1,13 @@
+POST http://localhost:5000/schedule/createschedule
+Content-Type: application/json
+
+{
+  "courseId":"66ea96311f254f8d8b4bc443",
+  "startDate":"",
+  "endDate":"",
+  "dayOfWeek":[1,3,5],
+  "time":""
+}
+
+###
+GET http://localhost:5000/schedule/getschedule
