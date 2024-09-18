@@ -19,8 +19,7 @@ const CourseSchema = mongoose.Schema({
   },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Schedule',
-    required: true
+    ref: 'Schedule'
   },
 }, {timestamps: true})
 
