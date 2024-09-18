@@ -2,8 +2,9 @@ const Course = require('../Models/CourseModel')
 
 exports.CreateCourse = async (req, res) => {
   try {
-    const {courseName, duration, description, price, schedule} = req.body
-    const course = new Course({courseName, duration, description, price, schedule})
+    const {courseName, duration, description, price} = req.body
+    const course = new Course({courseName, duration, description, price})
+    
     await course.save()
     res.status(201).send(course)
   } catch (error) {

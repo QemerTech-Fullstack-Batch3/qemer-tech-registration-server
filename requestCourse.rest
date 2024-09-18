@@ -27,4 +27,4 @@ Content-Type: application/json
   "price":6000
 }
 ###
-DELETE http://localhost:5000/course/deletecourse/66eaa3212a2a98b8f5aa30c3
+DELETE http://localhost:5000/course/deletecourse/66ea96691f254f8d8b4bc447
