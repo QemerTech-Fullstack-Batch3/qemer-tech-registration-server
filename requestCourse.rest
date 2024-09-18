@@ -5,8 +5,7 @@ Content-Type: application/json
   "courseName":"Graphics Design",
   "duration":"6 month",
   "description":"this",
-  "price": 6000,
-  "schedule":"Tus/Thu/Sat"
+  "price": 6000
 }
 
 ###
