@@ -58,6 +58,27 @@ exports.GetRegisters = async (req, res) => {
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error getting registers: ", error)
-    res.status(500).send("An error occured while getting registers")
+    res.status(500).send("An error occured while getting registers.")
   }
 }
+
+exports.GetUserRegistration = async (req, res) => {
+  
+}
+
+exports.DeleteRegistration = async (req, res) => {
+  try {
+    const registrationId = req.params.id
+    const registrationToDelete = Register.findById(registrationId)
+
+    if(!registrationToDelete){
+      return res.status(404).send("Registration not found.")
+    }
+    await Register.findByIdAndDelete(registrationId)
+    res.status(201).send("Registration deleted Succesfully.")
+  } catch (error) {
+    console.error("Error deleting registration: ", error)
+    res.status(500).send("An error occured while deleteing registration.")
+  }
+}
+
