@@ -3,7 +3,8 @@ const Course = require('../Models/CourseModel')
 exports.CreateCourse = async (req, res) => {
   try {
     const {courseName, duration, description, price, schedule} = req.body
-    const course = await Course.create({courseName, duration, description, price, schedule})
+    const course = new Course({courseName, duration, description, price, schedule})
+    await course.save()
     res.send(course)
   } catch (error) {
     console.error("Error creating course:", error)

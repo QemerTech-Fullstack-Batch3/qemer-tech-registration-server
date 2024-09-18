@@ -2,11 +2,11 @@ POST http://localhost:5000/course/createcourse
 Content-Type: application/json
 
 {
-  "courseName":"Web Dev",
+  "courseName":"Graphics Design",
   "duration":"6 month",
   "description":"this",
   "price": 6000,
-  "schedule":"Mon/Wed/Fri"
+  "schedule":"Tus/Thu/Sat"
 }
 
 ###
