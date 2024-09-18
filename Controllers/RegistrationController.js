@@ -57,7 +57,7 @@ exports.GetRegisters = async (req, res) => {
     const registers = await Register.find()
     res.status(200).send(registers)
   } catch (error) {
-    console.error("Error getting registers: ", error)
+    console.error("Error fetching registrations: ", error)
     res.status(500).send("An error occured while getting registers.")
   }
 }

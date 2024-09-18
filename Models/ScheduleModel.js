@@ -14,8 +14,15 @@ const ScheduleSchema = mongoose.Schema({
     required: true 
   },
   dayOfWeek: {
-    type: Array,
-    required: true 
+    type: [Number],
+    required: true,
+    enum: [1,2,3,4,5,6,7],
+    validate: {
+      validator: (value) => {
+        return value.length > 0;
+      },
+      message: 'At least one day of the week must be selected',
+    }
   },
   time: {
     type: String,
