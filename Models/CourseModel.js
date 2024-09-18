@@ -25,4 +25,4 @@ const CourseSchema = mongoose.Schema({
 
 const Course = mongoose.model("Course", CourseSchema)
 
-module.exports = {CourseSchema, Course}
+module.exports = Course
