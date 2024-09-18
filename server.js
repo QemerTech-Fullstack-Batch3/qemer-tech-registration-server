@@ -14,7 +14,7 @@ connectDB()
 // app.use('/user', require('./Routers/UserRouter'))
 app.use('/course', require('./Routers/CourseRouter'))
 app.use('/registration', require('./Routers/RegistrationRouter'))
-// app.use('/schedule', require('./Routers/ScheduleRouter'))
+app.use('/schedule', require('./Routers/ScheduleRouter'))
 // app.use('/payment', require('./Routers/PaymentRouter'))
 
 app.listen(PORT, console.log(`Running on port ${PORT}`))

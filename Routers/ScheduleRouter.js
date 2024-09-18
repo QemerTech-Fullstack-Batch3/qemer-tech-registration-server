@@ -7,6 +7,6 @@ const {
 } = require('../Controllers/ScheduleController')
 
 router.post('/createschedule', CreateSchedule)
-router.get('/getschedule', GetSchedule)
+router.get('/getschedule/:id', GetSchedule)
 
 module.exports = router 

@@ -3,11 +3,11 @@ Content-Type: application/json
 
 {
   "courseId":"66ea96311f254f8d8b4bc443",
-  "startDate":"",
-  "endDate":"",
+  "startDate":"2024-09-20",
+  "endDate":"2025-03-20",
   "dayOfWeek":[1,3,5],
-  "time":""
+  "time":"12:00:00"
 }
-
+ 
 ###
-GET http://localhost:5000/schedule/getschedule
+GET http://localhost:5000/schedule/getschedule/66eac2ed907d2fa7553a14a0

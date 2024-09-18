@@ -1,6 +1,8 @@
 const Schedule = require('../Models/ScheduleModel')
 const Course = require('../Models/CourseModel')
 
+const mongoose = require('mongoose')
+
 const daysOfWeekMap = {
   1: 'Monday',
   2: 'Tuesday',
@@ -17,7 +19,7 @@ exports.CreateSchedule = async (req, res) => {
     const { courseId, startDate, endDate, dayOfWeek, time } = req.body
 
     // course check
-    const courseIdObj = mongoose.Types.ObjectId(courseId);
+    const courseIdObj = new mongoose.Types.ObjectId(courseId);
     const course = await Course.findById(courseIdObj)
     if (!course) return res.status(404).send("Course not found")
     const courseInSchedule = await Schedule.findById(courseId)
@@ -32,6 +34,7 @@ exports.CreateSchedule = async (req, res) => {
     if (endDate <= startDate) {
       return res.status(400).send("End date must be after start date");
     }
+    
     // dayofweek check
     if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
       return res.status(400).send("At least one day of the week is required");
@@ -52,7 +55,8 @@ exports.CreateSchedule = async (req, res) => {
       dayOfWeek,
       time
     })
-    await schedule.save()
+    await schedule.save() 
+    res.status(201).send("Schedule created Succesfully.")
   } catch (error) {
     console.error("Error creating schedule: ", error)
     res.status(500).send("An error occured while creating schedule")
@@ -74,11 +78,30 @@ exports.GetSchedule = async (req, res) => {
     res.status(500).send("An error occured while getting schedule")
   }
 }
-exports.CreateSchedule = async (req, res) => {
+exports.EditSchedule = async (req, res) => {
   try {
+    const {courseId, startDate, endDate, dayOfWeek, time} = req.body
+    const scheduleId = req.params.id 
+    const schedule = await findById(scheduleId)
+    if(!schedule) return res.status(404).send("Schedule not found")
 
+    const editSchedule = await Schedule.findByIdAndUpdate(
+      scheduleId,
+      {courseId, startDate, endDate, dayOfWeek, time},
+      {new: true}
+    ) 
+    res.status(200).send(editSchedule)
   } catch (error) {
-    console.error("Error creating schedule: ", error)
-    res.status(500).send("An error occured while creating schedule")
+    console.error("Error editing schedule: ", error)
+    res.status(500).send("An error occured while editing schedule")
+  }
+}
+
+exports.DeleteSchedule = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    console.error("Error deleting schedule: ", error)
+    res.status(500).send("An error occured while deleting schedule")
   }
 }
