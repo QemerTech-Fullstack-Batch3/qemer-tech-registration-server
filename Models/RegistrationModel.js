@@ -20,13 +20,11 @@ const RegistrationSchema = mongoose.Schema({
   registrationDate: {
     type: Date,
     default: Date.now,
-    required: true 
   },
   paymentStatus: {
     type: String,
     enum: ["Paid", "NotPaid"],
     default: "NotPaid",
-    required: true 
   }
 }, { timestamps: true })
 
