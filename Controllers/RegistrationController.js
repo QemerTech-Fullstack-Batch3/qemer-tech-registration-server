@@ -28,19 +28,21 @@ exports.Register = async (req, res) => {
 
 exports.RegisterForCourse = async (req, res) => {
   try {
-    const {studentInfo, courseId, learningMode} = req.body
+    const {fullName, gender, phone, courseId, learningMode} = req.body
     const isCourseAvaiable = await Course.findOne({_id: courseId}) 
     if(!isCourseAvaiable){
       return res.status(404).send("Course not found.")
     }
     
-    const existingStudent = await Register.findOne({courseId: courseId, studentInfo: studentInfo})
+    const existingStudent = await Register.findOne({courseId: courseId, phone: phone})
     if(existingStudent){
       return res.status(409).send("Student alreay registred for this course")
     }
   
     const student = new Register({
-      studentInfo,
+      fullName,
+      gender,
+      phone,
       courseId,
       learningMode
     })
