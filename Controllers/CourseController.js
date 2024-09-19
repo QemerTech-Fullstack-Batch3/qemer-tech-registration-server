@@ -15,11 +15,13 @@ exports.CreateCourse = async (req, res) => {
   try {
     const {courseName, duration, description, price, courseRegistrationStatus, schedule} = req.body
 
+    if (courseRegistrationStatus === "ended"){
+      courseStatus = "InActive"
+    } else{
+      courseStatus = "Active"
+    }
+    
     const newCourse = new Course({courseName, duration, description, price, courseStatus, courseRegistrationStatus})
-
-    if(newCourse.courseRegistrationStatus == "OnRegistration" || newCourse.courseRegistrationStatus == "OnProgress"){
-      newCourse.courseStatus = "Active"
-    } else{ newCourse.courseStatus = "InActive"}
 
     // schedule 
     const newSchedule = new Schedule({
