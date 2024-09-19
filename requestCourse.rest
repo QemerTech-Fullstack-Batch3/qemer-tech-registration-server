@@ -20,7 +20,7 @@ GET http://localhost:5000/course/getcourses
 
 ###
 
-GET http://localhost:5000/course/getspecificcourse/66ebd49dfbb13ab86d7985a7
+GET http://localhost:5000/course/getspecificcourse/66ebccbcb9250edc7f1b81aa
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3
@@ -33,4 +33,4 @@ Content-Type: application/json
   "price":6000
 }
 ###
-DELETE http://localhost:5000/course/deletecourse/66ebd49dfbb13ab86d7985a7
+DELETE http://localhost:5000/course/deletecourse/66ebcd1db9250edc7f1b81af
