@@ -17,6 +17,10 @@ const CourseSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  courseStatus: {
+    type: String,
+    enum: ["active","InActive"]
+  },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule'
