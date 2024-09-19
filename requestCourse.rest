@@ -2,15 +2,15 @@ POST http://localhost:5000/course/createcourse
 Content-Type: application/json
 
 {
-  "courseName":"Graphics Design1",
-  "duration":"2 month",
-  "description":"GD description",
+  "courseName":"MERN Stack",
+  "duration":"6 month",
+  "description":"mern description",
   "price": 3000,
   "learningMode":"Online",
   "courseRegistrationStatus": "OnProgress",
   "schedule": {
      "startDate":"2024-09-20",
-     "endDate":"2024-11-20",
+     "endDate":"2025-11-20",
      "dayOfWeek":[2,4,6],
      "time":"12:00:00"
   }
