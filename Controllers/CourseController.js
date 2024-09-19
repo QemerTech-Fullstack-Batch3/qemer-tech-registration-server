@@ -1,12 +1,34 @@
 const Course = require('../Models/CourseModel')
+const Schedule = require('../Models/ScheduleModel')
+
+const daysOfWeekMap = {
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Wednesday',
+  4: 'Thursday',
+  5: 'Friday',
+  6: 'Saturday',
+  7: 'Sunday',
+};
 
 exports.CreateCourse = async (req, res) => {
   try {
-    const {courseName, duration, description, price} = req.body
-    const course = new Course({courseName, duration, description, price})
-    
-    await course.save()
-    res.status(201).send(course)
+    const {courseName, duration, description, price, schedule} = req.body
+
+    const newCourse = new Course({courseName, duration, description, price})
+    const newSchedule = new Schedule({
+      courseId: newCourse._id,
+      startDate: schedule.startDate,
+      endDate: schedule.endDate,
+      dayOfWeek: schedule.dayOfWeek,
+      time: schedule.time 
+    })
+    const [savedCourse, savedSchedule] = await Promise.all([
+      newCourse.save(),
+      newSchedule.save() 
+    ])
+
+    res.status(201).send({course: savedCourse, schedule: savedSchedule})
   } catch (error) {
     console.error("Error creating course:", error)
     res.status(500).send("An error occured while creating a course")
@@ -29,7 +51,13 @@ exports.GetCourseInfo = async (req, res) => {
       return res.status(404).send("Course not found.")
     }
 
-    res.status(200).send(course)
+    const schedule = await Schedule.findOne({courseId: req.params.id})
+    const formattedSchedule = {
+      ...schedule.toObject(),
+      dayOfWeek: schedule.dayOfWeek.map(dayNumber => daysOfWeekMap[dayNumber]),
+    };
+
+    res.status(200).send({course: course, schedule: formattedSchedule})
   } catch (error) {
     console.error('Error while fetching a specific course:', error)
     res.status(501).send("An error occured while getting a specific course info")
@@ -65,7 +93,10 @@ exports.DeleteCourse = async (req, res) => {
       return res.status(404).send("Course not found")
     }
 
+    const schedule = Schedule.findOne({courseId: req.params.id})
+    if(!schedule){}
     await Course.findByIdAndDelete(courseId)
+    await Schedule.deleteMany({courseId})
     res.status(200).send("Course Succesfully deleted.")
   } catch (error) {
     console.error("Error while deleting a course", error)

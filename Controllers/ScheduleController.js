@@ -78,6 +78,37 @@ exports.GetSchedule = async (req, res) => {
     res.status(500).send("An error occured while getting schedule")
   }
 }
+exports.GetScheduleOfACourse = async (req, res) => {
+  try {
+    const schedule = await Schedule.findOne({courseId: req.params.id})
+    const formattedSchedule = {
+      ...schedule.toObject(),
+      dayOfWeek: schedule.dayOfWeek.map(dayNumber => daysOfWeekMap[dayNumber]),
+    };
+    res.status(200).json(formattedSchedule)
+  } catch (error) {
+    console.error("Error fetching schedule: ", error)
+    res.status(500).send("An error occured while getting schedule")
+  }
+}
+
+
+
+exports.GetSchedules = async (req, res) => {
+  try {
+    const schedules = await Schedule.find();
+
+    const formattedSchedules = schedules.map((schedule) => ({
+      ...schedule.toObject(),
+      dayOfWeek: schedule.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber]),
+    }));
+
+    res.status(200).json(formattedSchedules);
+  } catch (error) {
+    console.error("Error fetching schedules: ", error)
+    res.status(500).send("An error occured while getting schedules")
+  }
+}
 exports.EditSchedule = async (req, res) => {
   try {
     const {courseId, startDate, endDate, dayOfWeek, time} = req.body

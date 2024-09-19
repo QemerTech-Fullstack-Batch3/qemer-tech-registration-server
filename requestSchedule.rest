@@ -8,6 +8,13 @@ Content-Type: application/json
   "dayOfWeek":[1,3,5],
   "time":"12:00:00"
 }
- 
+
 ###
-GET http://localhost:5000/schedule/getschedule/66eac2ed907d2fa7553a14a0
+GET http://localhost:5000/schedule/getschedules
+
+###
+GET http://localhost:5000/schedule/getschedule/66ebcd1db9250edc7f1b81b0
+
+###
+GET http://localhost:5000/schedule/getscheduleofacourse/66ebccbcb9250edc7f1b81aa
+
