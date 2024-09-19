@@ -2,10 +2,11 @@ POST http://localhost:5000/course/createcourse
 Content-Type: application/json
 
 {
-  "courseName":"Graphics Design",
+  "courseName":"Graphics Design1",
   "duration":"2 month",
   "description":"GD description",
   "price": 3000,
+  "courseRegistrationStatus": "OnProgress",
   "schedule": {
      "startDate":"2024-09-20",
      "endDate":"2024-11-20",
