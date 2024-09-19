@@ -17,6 +17,14 @@ const CourseSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  courseStatus: {
+    type: String,
+    enum: ["Active","InActive"]
+  },
+  courseRegistrationStatus: {
+    type: String,
+    enum: ["OnRegistration", "OnProgress", "ended"]
+  },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule'
