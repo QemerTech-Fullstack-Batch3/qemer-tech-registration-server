@@ -31,6 +31,11 @@ const CourseSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule'
   },
+  learningMode: {
+    type: String,
+    enum: ["Online","InPerson"],
+    required: true 
+  },
 }, {timestamps: true})
 
 const Course = mongoose.model("Course", CourseSchema)

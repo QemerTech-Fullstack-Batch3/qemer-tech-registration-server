@@ -27,12 +27,7 @@ const RegistrationSchema = mongoose.Schema({
     enum: ["Paid", "NotPaid"],
     default: "NotPaid",
     required: true 
-  },
-  learningMode: {
-    type: String,
-    enum: ["Online","InPerson"],
-    required: true 
-  },
+  }
 }, { timestamps: true })
 
 const Registration = mongoose.model("Registration", RegistrationSchema)
