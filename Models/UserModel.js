@@ -26,8 +26,7 @@ const UserSchema = mongoose.Schema({
   role: {
     type: String,
     enum: ['Admin','Student'],
-    default: "Student",
-    required: true,
+    default: "Student"
   },
   registration: [RegistrationSchema],
   learningMode: {
