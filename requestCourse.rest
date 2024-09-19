@@ -6,6 +6,7 @@ Content-Type: application/json
   "duration":"2 month",
   "description":"GD description",
   "price": 3000,
+  "learningMode":"Online",
   "courseRegistrationStatus": "OnProgress",
   "schedule": {
      "startDate":"2024-09-20",
@@ -21,7 +22,7 @@ GET http://localhost:5000/course/getcourses
 
 ###
 
-GET http://localhost:5000/course/getspecificcourse/66ebccbcb9250edc7f1b81aa
+GET http://localhost:5000/course/getspecificcourse/66ebed3382e21b95dfc2f247
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3

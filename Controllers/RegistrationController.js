@@ -1,50 +1,25 @@
 const jwt = require('jsonwebtoken')
-const Register = require('../Models/RegistrationModel')
+const Registration = require('../Models/RegistrationModel')
 const Course = require('../Models/CourseModel')
-
-exports.Register = async (req, res) => {
-  try {
-    const {studentId, courseId, registrationDate, paymentStatus, learningMode} = req.body
-
-    const isCourseAvaiable = await Course.findOne({courseId: courseId}) 
-    if(!isCourseAvaiable){
-      return res.status().send("Course not found.")
-    }
-
-    const studRegistered = await Register.findOne({studentId: studentId ,courseId: courseId})
-
-    if(studRegistered){
-      return res.status(409).send("Student already registered for this course.")
-    }
-
-    const newRegistration = {studentId, courseId, registrationDate, paymentStatus, learningMode}
-    await newRegistration.create()
-
-    res.status(201).send("Student successfully registered for the course!")
-  } catch (error) {
-    res.status(500).send("An error occurred while registering.")
-  }
-}
 
 exports.RegisterForCourse = async (req, res) => {
   try {
-    const {fullName, gender, phone, courseId, learningMode} = req.body
+    const {fullName, gender, phone, courseId} = req.body
     const isCourseAvaiable = await Course.findOne({_id: courseId}) 
     if(!isCourseAvaiable){
       return res.status(404).send("Course not found.")
     }
     
-    const existingStudent = await Register.findOne({courseId: courseId, phone: phone})
+    const existingStudent = await Registration.findOne({courseId: courseId, phone: phone})
     if(existingStudent){
       return res.status(409).send("Student alreay registred for this course")
     }
   
-    const student = new Register({
+    const student = new Registration({
       fullName,
       gender,
       phone,
-      courseId,
-      learningMode
+      courseId
     })
     await student.save()
     res.status(201).send("Student successfully registered for the course!")
@@ -56,7 +31,7 @@ exports.RegisterForCourse = async (req, res) => {
 
 exports.GetRegisters = async (req, res) => {
   try {
-    const registers = await Register.find()
+    const registers = await Registration.find()
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error fetching registrations: ", error)
@@ -64,19 +39,25 @@ exports.GetRegisters = async (req, res) => {
   }
 }
 
-exports.GetUserRegistration = async (req, res) => {
-  
+exports.GetStudentRegistrationInfo = async (req, res) => {
+  const registrationId = req.params.id 
+  const registration = await Registration.findById(registrationId)
+  if(!registration){
+    res.status(404).send("Registration not found")
+  }
+
+  res.status(200).send(registration)
 }
 
 exports.DeleteRegistration = async (req, res) => {
   try {
     const registrationId = req.params.id
-    const registrationToDelete = Register.findById(registrationId)
+    const registrationToDelete = Registration.findById(registrationId)
 
     if(!registrationToDelete){
       return res.status(404).send("Registration not found.")
     }
-    await Register.findByIdAndDelete(registrationId)
+    await Registration.findByIdAndDelete(registrationId)
     res.status(201).send("Registration deleted Succesfully.")
   } catch (error) {
     console.error("Error deleting registration: ", error)
