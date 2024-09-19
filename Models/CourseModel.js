@@ -29,8 +29,7 @@ const CourseSchema = mongoose.Schema({
   },
   learningMode: {
     type: String,
-    enum: ["Online","InPerson"],
-    required: true 
+    enum: ["Online","InPerson"]
   },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
