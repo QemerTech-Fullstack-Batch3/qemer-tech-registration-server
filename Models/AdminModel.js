@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const {RegistrationSchema} = require('./RegistrationModel')
 
-const UserSchema = mongoose.Schema({
+const AdminSchema = mongoose.Schema({
   userId: {
     type: String,
     required: true
@@ -40,6 +40,6 @@ const UserSchema = mongoose.Schema({
   }]
 }, {timestamps: true})
 
-const User = mongoose.model("User", UserSchema)
+const Admin = mongoose.model("Admin", AdminSchema)
 
-module.exports = User
+module.exports = Admin

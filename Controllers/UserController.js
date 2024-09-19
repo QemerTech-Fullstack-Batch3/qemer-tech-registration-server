@@ -1,7 +1,7 @@
 const bcypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const User = require('../Models/UserModel')
+const Admin = require('../Models/AdminModel')
 
 exports.Register = async (req, res) => {
   try {
