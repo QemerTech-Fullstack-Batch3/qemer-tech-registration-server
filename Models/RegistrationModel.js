@@ -1,24 +1,17 @@
 const mongoose = require('mongoose')
 
 const RegistrationSchema = mongoose.Schema({
-  studentInfo: {
-    name: {
-      type: String,
-      required: true
-    },
-    gender: {
-      type: String,
-      enum: ['M','F']
-    },
-    email: String,
-    phone: {
-      type: String,
-      required: true
-    },
-    role: {
-      type: String,
-      enum: ["Admin", "Student"]
-    }
+  fullName: {
+    type: String,
+    required: true
+  },
+  gender: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
   },
   courseId: {
     type: String,
