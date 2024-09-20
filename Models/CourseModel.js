@@ -29,10 +29,12 @@ const CourseSchema = mongoose.Schema({
   },
   learningMode: {
     type: String,
-    enum: ["Online","InPerson"]
+    enum: ["Online","InPerson"],
+    required: true
   },
   spotLimit: {
-    type: Number
+    type: Number,
+    required: true 
   },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
