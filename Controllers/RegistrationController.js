@@ -18,7 +18,10 @@ exports.RegisterForCourse = async (req, res) => {
     }
 
     // student check
-    const existingStudent = await Registration.findOne({courseId: courseId, phone: phone})
+    const existingStudent = await Registration.findOne({
+      courseId: courseId, 
+      phone: phone
+    })
     if(existingStudent){
       return res.status(409).send("Student alreay registred for this course")
     }
@@ -30,10 +33,11 @@ exports.RegisterForCourse = async (req, res) => {
       courseId
     })
     await newRegistration.save()
-    // if (currentRegistrations + 1 >= course.spotLimit) {
-    //   await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" });
-    // }
-    await axios.patch(`course/updateStatus/${courseId}`);
+    try {
+      await axios.patch(`http://localhost:5000/course/updateStatus/${courseId}`);
+    } catch (error) {
+      console.error("Error in updating course status:", error.response ? error.response.data : error.message);
+    }
 
     res.status(201).json({ message: "Student successfully registered for the course!", registration: newRegistration });
 

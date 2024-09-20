@@ -121,10 +121,10 @@ exports.UpdateCourseStatus = async (req, res) => {
       return res.status(404).send("Course not found.")
     }
     const currentRegistrations = await Register.countDocuments({courseId})
-    if (currentRegistrations >= course.spotLimit){
-      return res.status(400).send("The course has reached its spot limit. No more students can register.")
-    }
-    if (currentRegistrations + 1 >= course.spotLimit) {
+    // if (currentRegistrations >= course.spotLimit){
+    //   return res.status(400).send("The course has reached its spot limit. No more students can register.")
+    // }
+    if (currentRegistrations >= course.spotLimit) {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
       return res.send("Course status updated to OnProgress");
     }

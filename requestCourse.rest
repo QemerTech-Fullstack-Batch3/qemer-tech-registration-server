@@ -2,13 +2,13 @@ POST http://localhost:5000/course/createcourse
 Content-Type: application/json
 
 {
-  "courseName":"MERN Stack2",
+  "courseName":"MERN Stack4",
   "duration":"6 month",
   "description":"mern description",
   "price": 3000,
   "courseRegistrationStatus": "OnRegistration",
-  "learningMode":"Online",
-  "spotLimit": 50,
+  "learningMode":"InPerson",
+  "spotLimit": 3,
   "schedule": {
      "startDate":"2024-09-20",
      "endDate":"2025-11-20",
@@ -36,4 +36,4 @@ Content-Type: application/json
   "price":6000
 }
 ###
-DELETE http://localhost:5000/course/deletecourse/66ebcd1db9250edc7f1b81af
+DELETE http://localhost:5000/course/deletecourse/66edc98bfd05290708c5a74f
