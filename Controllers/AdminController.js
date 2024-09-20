@@ -5,13 +5,7 @@ const Admin = require('../Models/AdminModel')
 
 exports.Register = async (req, res) => {
   try {
-    const {name, gender, email, phone, role, learningMode} = req.body
-    const existingUser = await User.findOne({phone: phone})
-    if(existingUser){
-      return res.status(501).send("Phone number already exists")
-    }
-
-    
+        
   } catch (error) {
     
   }

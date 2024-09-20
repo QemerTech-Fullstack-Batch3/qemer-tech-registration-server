@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-const {RegistrationSchema} = require('./RegistrationModel')
-
 const AdminSchema = mongoose.Schema({
   fullName: {
     type: String,
