@@ -12,7 +12,8 @@ const RegistrationSchema = mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   courseId: {
     type: String,

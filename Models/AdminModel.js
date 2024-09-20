@@ -3,41 +3,31 @@ const mongoose = require('mongoose')
 const {RegistrationSchema} = require('./RegistrationModel')
 
 const AdminSchema = mongoose.Schema({
-  userId: {
+  fullName: {
     type: String,
     required: true
   },
-  name: {
+  username: {
     type: String,
     required: true
-  },
-  gender: {
-    type: String,
-    enum: ['M','F']
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  phone: {
+  password: {
     type: String,
-    required: true
+    required: true 
   },
   role: {
     type: String,
-    enum: ['Admin','Student'],
-    default: "Student"
+    enum: ["superAdmin", "courseManager", "registrar"],
+    default: "courseManager"
   },
-  registration: [RegistrationSchema],
-  learningMode: {
-    type: String,
-    enum: ["Online", "InPerson"]
-  },
-  enrolledCourses: [{
-    courseName: {
-      type: String
-    }
-  }]
+  permissions: {
+    type: [String]
+  }
 }, {timestamps: true})
 
 const Admin = mongoose.model("Admin", AdminSchema)
