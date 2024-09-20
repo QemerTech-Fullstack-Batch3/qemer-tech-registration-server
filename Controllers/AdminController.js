@@ -3,9 +3,10 @@ const jwt = require('jsonwebtoken')
 
 const Admin = require('../Models/AdminModel')
 
-exports.Register = async (req, res) => {
+exports.SignUp = async (req, res) => {
   try {
-        
+    const {username, email, password} = req.body
+
   } catch (error) {
     
   }
