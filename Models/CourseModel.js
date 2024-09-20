@@ -31,6 +31,9 @@ const CourseSchema = mongoose.Schema({
     type: String,
     enum: ["Online","InPerson"]
   },
+  spotLimit: {
+    type: Number
+  },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule'
