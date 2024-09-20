@@ -2,12 +2,13 @@ POST http://localhost:5000/course/createcourse
 Content-Type: application/json
 
 {
-  "courseName":"MERN Stack",
+  "courseName":"MERN Stack2",
   "duration":"6 month",
   "description":"mern description",
   "price": 3000,
+  "courseRegistrationStatus": "OnRegistration",
   "learningMode":"Online",
-  "courseRegistrationStatus": "OnProgress",
+  "spotLimit": 50,
   "schedule": {
      "startDate":"2024-09-20",
      "endDate":"2025-11-20",

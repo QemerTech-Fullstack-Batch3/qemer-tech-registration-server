@@ -1,28 +1,42 @@
 const jwt = require('jsonwebtoken')
+const axios = require('axios')
 const Registration = require('../Models/RegistrationModel')
 const Course = require('../Models/CourseModel')
 
 exports.RegisterForCourse = async (req, res) => {
   try {
     const {fullName, gender, phone, courseId} = req.body
-    const isCourseAvaiable = await Course.findOne({_id: courseId}) 
-    if(!isCourseAvaiable){
+
+    // course check
+    const course = await Course.findOne({_id: courseId}) 
+    if(!course){
       return res.status(404).send("Course not found.")
     }
-    
+    const currentRegistrations = await Registration.countDocuments({courseId: courseId})
+    if(course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit){
+      return res.send("The course has reached its spot limit. No more students can register.")
+    }
+
+    // student check
     const existingStudent = await Registration.findOne({courseId: courseId, phone: phone})
     if(existingStudent){
       return res.status(409).send("Student alreay registred for this course")
     }
   
-    const student = new Registration({
+    const newRegistration = new Registration({
       fullName,
       gender,
       phone,
       courseId
     })
-    await student.save()
-    res.status(201).send("Student successfully registered for the course!")
+    await newRegistration.save()
+    // if (currentRegistrations + 1 >= course.spotLimit) {
+    //   await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" });
+    // }
+    await axios.patch(`course/updateStatus/${courseId}`);
+
+    res.status(201).json({ message: "Student successfully registered for the course!", registration: newRegistration });
+
   } catch (error) {
     console.error("Error registering for course: ", error)
     res.status(500).send("An error occurred while registering")
