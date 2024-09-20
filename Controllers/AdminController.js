@@ -6,7 +6,7 @@ const Admin = require('../Models/AdminModel')
 exports.SignUp = async (req, res) => {
   try {
     const {username, email, password} = req.body
-
+    
   } catch (error) {
     
   }
