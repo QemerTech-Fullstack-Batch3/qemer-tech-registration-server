@@ -21,6 +21,10 @@ const AdminSchema = mongoose.Schema({
   },
   permissions: {
     type: [String]
+  },
+  isActive: {
+    type: Boolean,
+    default: false
   }
 }, {timestamps: true})
 
