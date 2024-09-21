@@ -16,8 +16,8 @@ const AdminSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["superAdmin", "admin", "registrar"],
-    default: "courseManager"
+    enum: ["superAdmin", "admin", "registrar", "Pending"],
+    default: "Pending"
   },
   permissions: {
     type: [String]
