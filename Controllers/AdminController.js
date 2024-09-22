@@ -106,6 +106,10 @@ exports.AssignRole = async (req, res) => {
 
   const adminRole = ['Admin', 'Registrar']
   try {
+    if(req.user.role !== "SuperAdmin"){
+      return res.status(403).send("Access denied. Only super admins can perform this action.")
+    }
+    
     if (!adminRole.includes(role)) {
       return res.status(400).send("Invalid role assigned.")
     }
@@ -126,8 +130,25 @@ exports.AssignRole = async (req, res) => {
   }
 }
 
+exports.GetUsersInPending = async (req, res) => {
+  try {
+    if(req.user.role !== "SuperAdmin"){
+      return res.status(403).send("Access denied. Only super admins can perform this action.")
+    }
+    const usersInPending = await Admin.find({ role: 'Pending' })
+    res.status(200).send({ UsersInPending: usersInPending })
+  } catch (error) {
+    console.error("Error getting usersInPending: ", error)
+    res.status(500).send("An error occurrd while fetching usersInPending.")
+  }
+
+}
+
 exports.GetAdmins = async (req, res) => {
   try {
+    if(req.user.role !== "SuperAdmin"){
+      return res.status(403).send("Access denied. Only super admins can perform this action.")
+    }
     const admins = await Admin.find({ role: 'Admin' })
     res.status(200).send({ admins: admins })
   } catch (error) {
@@ -138,6 +159,9 @@ exports.GetAdmins = async (req, res) => {
 }
 exports.GetRegistrars = async (req, res) => {
   try {
+    if(req.user.role !== "SuperAdmin"){
+      return res.status(403).send("Access denied. Only super admins can perform this action.")
+    }
     const registrar = await Admin.find({ role: 'Registrar' })
     res.status(200).send({ Registrar: registrar })
   } catch (error) {

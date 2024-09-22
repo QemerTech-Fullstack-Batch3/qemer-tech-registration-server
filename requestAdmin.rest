@@ -11,10 +11,28 @@ POST http://localhost:5000/user/signup
 Content-Type: application/json
 
 {
-  "username":"admin1",
-  "email":"admin1@example.com",
-  "password":"admin123"
+  "username":"Registrar1",
+  "email":"Registrar1@example.com",
+  "password":"Registrar123"
 }
+
+###
+GET http://localhost:5000/user/getuserinpending
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+
+###
+PATCH http://localhost:5000/user/assignrole/66f01acc80232529980ffb00
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+Content-Type: application/json
+
+{
+  "role":"Registrar"
+}
+
 ###
 GET http://localhost:5000/user/getadmins
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAwOTU2OCwiZXhwIjoxNzI3MDExMzY4fQ.Tg9wTxrQfrUAaBcDj-evQcVZ25kx1LL5lsReblvzOhM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+
+###
+GET http://localhost:5000/user/getregistrars
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
