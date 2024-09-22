@@ -49,7 +49,7 @@ exports.RegisterForCourse = async (req, res) => {
 
 exports.GetRegisters = async (req, res) => {
   try {
-    const registers = await Registration.find()
+    if(req.user.role !== 'Admin' || req.user.role )
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error fetching registrations: ", error)
