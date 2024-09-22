@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-const authenticateSuperAdmin = require('../Middlewares/authenticateSuperAdmin')
 const authenticateToken = require('../Middlewares/jwt_auth')
 
 const {
