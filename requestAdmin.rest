@@ -1,0 +1,20 @@
+POST http://localhost:5000/user/loginSuperAdmin
+Content-Type: application/json
+
+{
+  "email":"superadmin@example.com",
+  "password":"superadminpassword1234"
+}
+
+###
+POST http://localhost:5000/user/signup
+Content-Type: application/json
+
+{
+  "username":"admin1",
+  "email":"admin1@example.com",
+  "password":"admin123"
+}
+###
+GET http://localhost:5000/user/getadmins
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAwOTU2OCwiZXhwIjoxNzI3MDExMzY4fQ.Tg9wTxrQfrUAaBcDj-evQcVZ25kx1LL5lsReblvzOhM

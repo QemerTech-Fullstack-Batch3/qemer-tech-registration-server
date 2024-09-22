@@ -11,7 +11,7 @@ app.use(cors())
 
 connectDB()
 
-// app.use('/user', require('./Routers/UserRouter'))
+app.use('/user', require('./Routers/AdminRouter'))
 app.use('/course', require('./Routers/CourseRouter'))
 app.use('/registration', require('./Routers/RegistrationRouter'))
 app.use('/schedule', require('./Routers/ScheduleRouter'))

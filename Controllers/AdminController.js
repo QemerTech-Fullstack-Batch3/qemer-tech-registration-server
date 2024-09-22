@@ -1,7 +1,59 @@
-const bcypt = require('bcrypt')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
+
 
 const Admin = require('../Models/AdminModel')
+
+
+const CreateSuperAdmin = async () => {
+  try {
+    const existingSuperAdmin = await Admin.findOne({ role: 'SuperAdmin' });
+    if (existingSuperAdmin) {
+      // console.log('Super admin already exists');
+      return;
+    }
+
+    // Create new super admin
+    const hashedPassword = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, 10);
+
+    const superAdmin = new Admin({
+      username: 'superadmin',
+      password: hashedPassword,
+      email: 'superadmin@example.com',
+      role: 'SuperAdmin',
+      isActive: true
+    });
+
+    await superAdmin.save();
+    console.log('Super admin created successfully!');
+  } catch (error) {
+    console.error('Error creating super admin:', error);
+  }
+}
+CreateSuperAdmin();
+
+exports.LogInSuperAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const superAdmin = await Admin.findOne({ email })
+    if (!superAdmin) {
+      return res.status(404).send("Incorrect email or password.")
+    }
+
+    const isMatch = await bcrypt.compare(password, superAdmin.password)
+    if (isMatch) {
+      const superAdminInfo = { role: superAdmin.role }
+      const accessToken = jwt.sign(superAdminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" })
+      return res.json({ message: `Welcome, ${superAdmin.name}!`, accessToken });
+    } else {
+      return res.status(401).send("Incorrect email or password. Please try again.")
+    }
+  } catch (error) {
+    console.error("Error logging super admin: ", error);
+    res.status(500).send("An error occurred while logging superadmin user.");
+  }
+}
 
 exports.SignUp = async (req, res) => {
   const { username, email, password } = req.body
@@ -11,7 +63,7 @@ exports.SignUp = async (req, res) => {
       return res.status(400).send("User already exist.")
     }
 
-    const hashedPassword = await bcypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10)
     const newAdmin = new Admin({
       username,
       email,
@@ -27,14 +79,34 @@ exports.SignUp = async (req, res) => {
     res.status(500).send("An error occurred while registering the user.");
   }
 }
-
-exports.AssignRole = async (req, res) => {
-  const {adminId} = req.params
-  const {role} = req.body
-
-  const adminRole = ['admin','registrar']
+exports.Login = async (req, res) => {
   try {
-    if(!adminRole.includes(role)){
+    const { email, password } = req.body
+    const admin = Admin.findOne({ email })
+    if (!admin) {
+      return res.status(404).send("Incorrect email or password.")
+    }
+
+    const isMatch = await bcrypt.compare(password, admin.password)
+    if (isMatch) {
+      const adminInfo = { role: admin.role }
+      const accessToken = jwt.sign(adminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" })
+      return res.json({ message: `Welcome, ${admin.name}!`, accessToken });
+    } else {
+      return res.status(401).send("Incorrect email or password. Please try again.")
+    }
+  } catch (error) {
+    console.error("Error logging admin: ", error);
+    res.status(500).send("An error occurred while logging admin user.");
+  }
+}
+exports.AssignRole = async (req, res) => {
+  const { adminId } = req.params
+  const { role } = req.body
+
+  const adminRole = ['Admin', 'Registrar']
+  try {
+    if (!adminRole.includes(role)) {
       return res.status(400).send("Invalid role assigned.")
     }
     const updatedAdmin = await Admin.findByIdAndUpdate(
@@ -43,7 +115,7 @@ exports.AssignRole = async (req, res) => {
       { new: true }
     );
 
-    if(!updatedAdmin){
+    if (!updatedAdmin) {
       return res.status(404).send("Admin not found")
     }
 
@@ -53,3 +125,23 @@ exports.AssignRole = async (req, res) => {
     res.status(500).send("An error occurred while assigning the role.");
   }
 }
+
+exports.GetAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.find({ role: 'Admin' })
+    res.status(200).send({ admins: admins })
+  } catch (error) {
+    console.error("Error getting admins: ", error)
+    res.status(500).send("An error occurrd while fetching admins.")
+  }
+
+}
+exports.GetRegistrars = async (req, res) => {
+  try {
+    const registrar = await Admin.find({ role: 'Registrar' })
+    res.status(200).send({ Registrar: registrar })
+  } catch (error) {
+    console.error("Error getting registrar: ", error)
+    res.status(500).send("An error occurrd while fetching registrar.")
+  }
+}  
