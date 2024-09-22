@@ -52,5 +52,4 @@ exports.AssignRole = async (req, res) => {
     console.error("Error assigning role: ", error);
     res.status(500).send("An error occurred while assigning the role.");
   }
-
 }
