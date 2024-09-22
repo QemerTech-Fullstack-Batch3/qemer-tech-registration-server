@@ -1,9 +1,19 @@
 const mongoose = require('mongoose')
 
 const RegistrationSchema = mongoose.Schema({
-  studentId: {
+  fullName: {
     type: String,
-    required: true 
+    required: true
+  },
+  gender: {
+    type: String,
+    enum: ["Male","Female"],
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true,
+    unique: true
   },
   courseId: {
     type: String,
@@ -12,20 +22,14 @@ const RegistrationSchema = mongoose.Schema({
   registrationDate: {
     type: Date,
     default: Date.now,
-    required: true 
   },
   paymentStatus: {
     type: String,
     enum: ["Paid", "NotPaid"],
     default: "NotPaid",
-    required: true 
-  },
-  learningMode: {
-    type: String,
-    required: true 
-  },
+  }
 }, { timestamps: true })
 
 const Registration = mongoose.model("Registration", RegistrationSchema)
 
-module.exports = {RegistrationSchema, Registration}
+module.exports = Registration

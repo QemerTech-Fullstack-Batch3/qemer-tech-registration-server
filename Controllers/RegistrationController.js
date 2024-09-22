@@ -1,28 +1,85 @@
 const jwt = require('jsonwebtoken')
-const Register = require('../Models/RegistrationModel')
+const axios = require('axios')
+const Registration = require('../Models/RegistrationModel')
 const Course = require('../Models/CourseModel')
 
-exports.Register = async (req, res) => {
+exports.RegisterForCourse = async (req, res) => {
   try {
-    const {studentId, courseId, registrationDate, paymentStatus, learningMode} = req.body
+    const {fullName, gender, phone, courseId} = req.body
 
-    const isCourseAvaiable = await Course.findOne({courseId: courseId}) 
-    if(!isCourseAvaiable){
-      return res.status().send("Course not found.")
+    // course check
+    const course = await Course.findOne({_id: courseId}) 
+    if(!course){
+      return res.status(404).send("Course not found.")
+    }
+    const currentRegistrations = await Registration.countDocuments({courseId: courseId})
+    if(course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit){
+      return res.send("The course has reached its spot limit. No more students can register.")
     }
 
-    const studRegistered = await Register.findOne({studentId: studentId ,courseId: courseId})
-
-    if(studRegistered){
-      return res.status(409).send("Student already registered for this course.")
+    // student check
+    const existingStudent = await Registration.findOne({
+      courseId: courseId, 
+      phone: phone
+    })
+    if(existingStudent){
+      return res.status(409).send("Student alreay registred for this course")
+    }
+  
+    const newRegistration = new Registration({
+      fullName,
+      gender,
+      phone,
+      courseId
+    })
+    await newRegistration.save()
+    try {
+      await axios.patch(`http://localhost:5000/course/updateStatus/${courseId}`);
+    } catch (error) {
+      console.error("Error in updating course status:", error.response ? error.response.data : error.message);
     }
 
-    const newRegistration = {studentId, courseId, registrationDate, paymentStatus, learningMode}
-    await newRegistration.create()
+    res.status(201).json({ message: "Student successfully registered for the course!", registration: newRegistration });
 
-    res.status(201).send("Student successfully registered for the course!")
   } catch (error) {
-    res.status(500).send("An error occurred while registering.")
+    console.error("Error registering for course: ", error)
+    res.status(500).send("An error occurred while registering")
+  }
+}
+
+exports.GetRegisters = async (req, res) => {
+  try {
+    const registers = await Registration.find()
+    res.status(200).send(registers)
+  } catch (error) {
+    console.error("Error fetching registrations: ", error)
+    res.status(500).send("An error occured while getting registers.")
+  }
+}
+
+exports.GetStudentRegistrationInfo = async (req, res) => {
+  const registrationId = req.params.id 
+  const registration = await Registration.findById(registrationId)
+  if(!registration){
+    res.status(404).send("Registration not found")
+  }
+
+  res.status(200).send(registration)
+}
+
+exports.DeleteRegistration = async (req, res) => {
+  try {
+    const registrationId = req.params.id
+    const registrationToDelete = Registration.findById(registrationId)
+
+    if(!registrationToDelete){
+      return res.status(404).send("Registration not found.")
+    }
+    await Registration.findByIdAndDelete(registrationId)
+    res.status(201).send("Registration deleted Succesfully.")
+  } catch (error) {
+    console.error("Error deleting registration: ", error)
+    res.status(500).send("An error occured while deleteing registration.")
   }
 }
 

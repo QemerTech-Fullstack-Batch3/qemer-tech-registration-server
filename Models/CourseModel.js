@@ -1,15 +1,7 @@
 const mongoose = require('mongoose')
 
 const CourseSchema = mongoose.Schema({
-  courseId: {
-    type: String,
-    required: true
-  },
   courseName: {
-    type: String,
-    required: true
-  },
-  courseMode: {
     type: String,
     required: true
   },
@@ -25,12 +17,31 @@ const CourseSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  scedule: {
+  courseStatus: {
     type: String,
+    enum: ["Active","InActive"],
+    default: "Active"
+  },
+  courseRegistrationStatus: {
+    type: String,
+    enum: ["OnRegistration", "OnProgress", "ended"],
     required: true
+  },
+  learningMode: {
+    type: String,
+    enum: ["Online","InPerson"],
+    required: true
+  },
+  spotLimit: {
+    type: Number,
+    required: true 
+  },
+  scheduleId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Schedule'
   },
 }, {timestamps: true})
 
 const Course = mongoose.model("Course", CourseSchema)
 
-module.exports = {CourseSchema, Course}
+module.exports = Course
