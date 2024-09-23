@@ -49,7 +49,9 @@ exports.RegisterForCourse = async (req, res) => {
 
 exports.GetRegisters = async (req, res) => {
   try {
-    if(req.user.role !== 'Admin' || req.user.role )
+    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+      return res.status(403).send('Access denied. Only admins can perform this action.')
+    }
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error fetching registrations: ", error)
@@ -69,6 +71,10 @@ exports.GetStudentRegistrationInfo = async (req, res) => {
 
 exports.DeleteRegistration = async (req, res) => {
   try {
+    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+      return res.status(403).send('Access denied. Only admins can perform this action.')
+    }
+
     const registrationId = req.params.id
     const registrationToDelete = Registration.findById(registrationId)
 
@@ -80,6 +86,19 @@ exports.DeleteRegistration = async (req, res) => {
   } catch (error) {
     console.error("Error deleting registration: ", error)
     res.status(500).send("An error occured while deleteing registration.")
+  }
+}
+
+exports.DeleteRegistrationCollection = async (req, res) => {
+  try {
+    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+      return res.status(403).send('Access denied. Only admins can perform this action.')
+    }
+    await Registration.deleteMany() 
+    res.status(200).send("Registration collection sucessfully deleted.")
+  } catch (error) {
+    console.error("Error deleteing registration collection.")
+    res.status(500).send("An error occured while deleting the delete collection.")
   }
 }
 

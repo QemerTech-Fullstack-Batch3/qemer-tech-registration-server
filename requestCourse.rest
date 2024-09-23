@@ -1,8 +1,9 @@
 POST http://localhost:5000/course/createcourse
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzA3NTExNywiZXhwIjoxNzI3MDc2OTE3fQ.GHMHum0AIyMmfKAr20ZCii-XOG_LxdmCTvsJiXOdJr8
 Content-Type: application/json
 
 {
-  "courseName":"MERN Stack4",
+  "courseName":"MERN Stack",
   "duration":"6 month",
   "description":"mern description",
   "price": 3000,
@@ -17,6 +18,7 @@ Content-Type: application/json
   }
 }
 
+
 ###
 
 GET http://localhost:5000/course/getcourses
@@ -27,6 +29,7 @@ GET http://localhost:5000/course/getspecificcourse/66ebed3382e21b95dfc2f247
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzA3NTExNywiZXhwIjoxNzI3MDc2OTE3fQ.GHMHum0AIyMmfKAr20ZCii-XOG_LxdmCTvsJiXOdJr8
 Content-Type: application/json
 
 {
@@ -36,4 +39,4 @@ Content-Type: application/json
   "price":6000
 }
 ###
-DELETE http://localhost:5000/course/deletecourse/66edc98bfd05290708c5a74f
+DELETE http://localhost:5000/course/deletecoursecollection

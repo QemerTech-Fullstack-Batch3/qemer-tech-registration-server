@@ -14,8 +14,12 @@ const daysOfWeekMap = {
 
 exports.CreateCourse = async (req, res) => {
   try {
+    if(!["Admin","SuperAdmin"].includes(req.user.role)){
+      return res.status(403).send("Access denied. Only super admins can perform this action.")
+    }
+    
     const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, schedule } = req.body
-
+    const course = await Course.findOne({courseName})
     if (courseRegistrationStatus === "ended") {
       courseStatus = "InActive"
     } else {
@@ -75,6 +79,9 @@ exports.GetCourseInfo = async (req, res) => {
 
 exports.EditCourse = async (req, res) => {
   try {
+    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+      res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')
+    }
     const { courseName, duration, description, price, schedule } = req.body
     const courseId = req.params.id
     const course = await Course.findById(courseId)
@@ -94,28 +101,31 @@ exports.EditCourse = async (req, res) => {
   }
 }
 
-exports.DeleteCourse = async (req, res) => {
-  try {
-    const courseId = req.params.id
-    const course = Course.findById(courseId)
-    if (!course) {
-      return res.status(404).send("Course not found")
-    }
+// exports.DeleteCourse = async (req, res) => {
+//   try {
+//     const courseId = req.params.id
+//     const course = Course.findById(courseId)
+//     if (!course) {
+//       return res.status(404).send("Course not found")
+//     }
 
-    const schedule = Schedule.findOne({ courseId: req.params.id })
-    if (!schedule) { }
-    await Course.findByIdAndDelete(courseId)
-    await Schedule.deleteMany({ courseId })
-    res.status(200).send("Course Succesfully deleted.")
-  } catch (error) {
-    console.error("Error while deleting a course", error)
-    res.status(501).send("An error occured deleting a course")
-  }
-}
+//     const schedule = Schedule.findOne({ courseId: req.params.id })
+//     if (!schedule) { }
+//     await Course.findByIdAndDelete(courseId)
+//     await Schedule.deleteMany({ courseId })
+//     res.status(200).send("Course Succesfully deleted.")
+//   } catch (error) {
+//     console.error("Error while deleting a course", error)
+//     res.status(501).send("An error occured deleting a course")
+//   }
+// }
 
 exports.UpdateCourseStatus = async (req, res) => {
   const {courseId} = req.params
   try {
+    if(!["Admin","SuperAdmin"].includes(req.user.role)){
+      return res.status(403).send("Access denied. Only admins can perform this action.")
+    }
     const course = await Course.findById(courseId)
     if(!course){
       return res.status(404).send("Course not found.")
@@ -132,5 +142,15 @@ exports.UpdateCourseStatus = async (req, res) => {
   } catch (error) {
     console.error("Error while updating course status", error)
     res.status(501).send("An error occured updating a course status")
+  }
+}
+
+exports.DeleteCourseCollection = async (req, res) => {
+  try {
+    await Course.deleteMany();
+    res.status(200).send("Course collection deleted Succesfully.")
+  } catch (error) {
+    console.error("Error while deleting course collection")
+    res.status(501).send("An error occured while deleting course collection.")
   }
 }

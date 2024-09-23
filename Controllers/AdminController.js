@@ -147,7 +147,7 @@ exports.GetUsersInPending = async (req, res) => {
 exports.GetAdmins = async (req, res) => {
   try {
     if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only super admins can perform this action.")
+      return res.status(403).send("Access denied. Only admins can perform this action.")
     }
     const admins = await Admin.find({ role: 'Admin' })
     res.status(200).send({ admins: admins })
