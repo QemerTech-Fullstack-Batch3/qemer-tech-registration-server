@@ -17,7 +17,7 @@ router.post('/createcourse', authenticateToken, CreateCourse)
 router.get('/getcourses', GetCourses)
 router.get('/getspecificcourse/:id', GetCourseInfo)
 router.patch('/editcourse/:id', authenticateToken, EditCourse)
-router.patch('/updatestatus/:courseId', authenticateToken, UpdateCourseStatus)
+// router.patch('/updatestatus/:courseId', UpdateCourseStatus)
 // router.delete('/deletecourse/:id', DeleteCourse)
 router.delete('/deletecoursecollection', DeleteCourseCollection) 
 

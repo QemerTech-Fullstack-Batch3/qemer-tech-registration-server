@@ -52,6 +52,7 @@ exports.GetRegisters = async (req, res) => {
     if (!["Admin","SuperAdmin"].includes(req.user.role)){
       return res.status(403).send('Access denied. Only admins can perform this action.')
     }
+    const registers = await Registration.find()
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error fetching registrations: ", error)

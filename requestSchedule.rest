@@ -18,3 +18,5 @@ GET http://localhost:5000/schedule/getschedule/66ebcd1db9250edc7f1b81b0
 ###
 GET http://localhost:5000/schedule/getscheduleofacourse/66ebccbcb9250edc7f1b81aa
 
+###
+DELETE  http://localhost:5000/schedule/deleteschedulecollection

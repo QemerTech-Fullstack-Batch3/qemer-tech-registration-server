@@ -19,7 +19,12 @@ exports.CreateCourse = async (req, res) => {
     }
     
     const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, schedule } = req.body
+
     const course = await Course.findOne({courseName})
+    if(course){
+      return res.status(400).send('This course alreay exists.')
+    }
+
     if (courseRegistrationStatus === "ended") {
       courseStatus = "InActive"
     } else {
@@ -123,9 +128,6 @@ exports.EditCourse = async (req, res) => {
 exports.UpdateCourseStatus = async (req, res) => {
   const {courseId} = req.params
   try {
-    if(!["Admin","SuperAdmin"].includes(req.user.role)){
-      return res.status(403).send("Access denied. Only admins can perform this action.")
-    }
     const course = await Course.findById(courseId)
     if(!course){
       return res.status(404).send("Course not found.")

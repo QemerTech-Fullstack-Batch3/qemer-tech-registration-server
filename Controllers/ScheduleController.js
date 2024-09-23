@@ -136,3 +136,14 @@ exports.DeleteSchedule = async (req, res) => {
     res.status(500).send("An error occured while deleting schedule")
   }
 }
+
+
+exports.DeleteScheduleCollection = async (req, res) => {
+  try {
+    await Schedule.deleteMany()
+    res.status(200).send("Schedule Collection delted sucessfully.")
+  } catch (error) {
+    console.error("Error deleting schedule collection: ", error)
+    res.status(500).send("An error occured while deleting schedule collection")
+  }
+}
