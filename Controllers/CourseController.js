@@ -139,6 +139,8 @@ exports.UpdateCourseStatus = async (req, res) => {
     if (currentRegistrations >= course.spotLimit) {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
       return res.send("Course status updated to OnProgress");
+    } else{
+      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnRegistration" }, { new: true });
     }
     res.send("Course status remain unchanged")
   } catch (error) {

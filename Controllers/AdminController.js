@@ -43,8 +43,8 @@ exports.LogInSuperAdmin = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, superAdmin.password)
     if (isMatch) {
-      const superAdminInfo = { role: superAdmin.role }
-      const accessToken = jwt.sign(superAdminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" })
+      const superAdminInfo = { role: superAdmin.role } 
+      const accessToken = jwt.sign(superAdminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" }) 
       return res.json({ message: `Welcome, ${superAdmin.name}!`, accessToken });
     } else {
       return res.status(401).send("Incorrect email or password. Please try again.")

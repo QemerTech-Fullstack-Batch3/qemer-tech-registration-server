@@ -95,7 +95,7 @@ exports.DeleteRegistrationCollection = async (req, res) => {
     if (!["Admin","SuperAdmin"].includes(req.user.role)){
       return res.status(403).send('Access denied. Only admins can perform this action.')
     }
-    await Registration.deleteMany() 
+    await Registration.deleteMany()
     res.status(200).send("Registration collection sucessfully deleted.")
   } catch (error) {
     console.error("Error deleteing registration collection.")

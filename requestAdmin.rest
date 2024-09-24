@@ -11,28 +11,28 @@ POST http://localhost:5000/user/signup
 Content-Type: application/json
 
 {
-  "username":"Registrar1",
-  "email":"Registrar1@example.com",
-  "password":"Registrar123"
+  "username":"admin2",
+  "email":"admin2@example.com",
+  "password":"admin234"
 }
 
 ###
 GET http://localhost:5000/user/getuserinpending
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzExMjMyMSwiZXhwIjoxNzI3MTE0MTIxfQ.uGZQSkoOrQLR8O8IP5HThWYZUyiNTwSfcSd4YxpeYTM
 
 ###
-PATCH http://localhost:5000/user/assignrole/66f01acc80232529980ffb00
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+PATCH http://localhost:5000/user/assignrole/66f1a4e2ed22f35d3a2b600e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzExMjMyMSwiZXhwIjoxNzI3MTE0MTIxfQ.uGZQSkoOrQLR8O8IP5HThWYZUyiNTwSfcSd4YxpeYTM
 Content-Type: application/json
 
 {
-  "role":"Registrar"
+  "role":"Admin"
 }
 
 ###
 GET http://localhost:5000/user/getadmins
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzExMjMyMSwiZXhwIjoxNzI3MTE0MTIxfQ.uGZQSkoOrQLR8O8IP5HThWYZUyiNTwSfcSd4YxpeYTM
 
 ###
 GET http://localhost:5000/user/getregistrars
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzAxMTAzOSwiZXhwIjoxNzI3MDEyODM5fQ.L8cBSYq1HHA0lsQiQG5gu8npDOxrKmKts1wWQc2dJuk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzExMjMyMSwiZXhwIjoxNzI3MTE0MTIxfQ.uGZQSkoOrQLR8O8IP5HThWYZUyiNTwSfcSd4YxpeYTM

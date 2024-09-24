@@ -1,11 +1,11 @@
 POST http://localhost:5000/course/createcourse
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzA3NzMzNSwiZXhwIjoxNzI3MDc5MTM1fQ.S8HHdvRgaNru4qQK357khmE4DTG6I9gmuNd27fAaoRQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzE2MjIwOSwiZXhwIjoxNzI3MTY0MDA5fQ.HalHgVOtzzRMtDCezZOLUIvZuOFUWhzV7X8sPj6ZTNs
 Content-Type: application/json
 
 {
-  "courseName":"MERN Stack",
+  "courseName":"GD",
   "duration":"6 month",
-  "description":"mern description",
+  "description":"GD description",
   "price": 3000,
   "courseRegistrationStatus": "OnRegistration",
   "learningMode":"InPerson",
@@ -25,11 +25,11 @@ GET http://localhost:5000/course/getcourses
 
 ###
 
-GET http://localhost:5000/course/getspecificcourse/66ebed3382e21b95dfc2f247
+GET http://localhost:5000/course/getspecificcourse/66f19c86bb6c51add660d1d2
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzA3NzMzNSwiZXhwIjoxNzI3MDc5MTM1fQ.S8HHdvRgaNru4qQK357khmE4DTG6I9gmuNd27fAaoRQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzE2MjIwOSwiZXhwIjoxNzI3MTY0MDA5fQ.HalHgVOtzzRMtDCezZOLUIvZuOFUWhzV7X8sPj6ZTNs
 Content-Type: application/json
 
 {
