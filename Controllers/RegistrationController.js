@@ -5,7 +5,7 @@ const Course = require('../Models/CourseModel')
 
 exports.RegisterForCourse = async (req, res) => {
   try {
-    const {fullName, gender, phone, courseId} = req.body
+    const {fullName, gender, phone, havePc, CityOfResidence, courseId} = req.body
 
     // course check
     const course = await Course.findOne({_id: courseId}) 
@@ -30,6 +30,8 @@ exports.RegisterForCourse = async (req, res) => {
       fullName,
       gender,
       phone,
+      havePc,
+      CityOfResidence,
       courseId
     })
     await newRegistration.save()
