@@ -15,6 +15,16 @@ const RegistrationSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+  havePc: {
+    type: String,
+    enum: ["Yes", "No"],
+    required: true
+  },
+  CityOfResidence: {
+    type: String,
+    enum: ["Addis Ababa", "Outside Addis Ababa"],
+    required: true
+  },
   courseId: {
     type: String,
     required: true 
