@@ -33,8 +33,7 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   spotLimit: {
-    type: Number,
-    required: true 
+    type: Number
   },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,

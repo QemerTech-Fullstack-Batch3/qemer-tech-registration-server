@@ -31,7 +31,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:5000/user/getadmins
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzExMjMyMSwiZXhwIjoxNzI3MTE0MTIxfQ.uGZQSkoOrQLR8O8IP5HThWYZUyiNTwSfcSd4YxpeYTM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzU0OTMxMSwiZXhwIjoxNzI3NTUxMTExfQ.qCf7b_j52cHZut3thabsvAhYc7KyVki36LVDneuvwXI
 
 ###
 GET http://localhost:5000/user/getregistrars

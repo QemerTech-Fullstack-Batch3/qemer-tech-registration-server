@@ -1,19 +1,18 @@
 POST http://localhost:5000/course/createcourse
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzE2MjIwOSwiZXhwIjoxNzI3MTY0MDA5fQ.HalHgVOtzzRMtDCezZOLUIvZuOFUWhzV7X8sPj6ZTNs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzU1MzI1NywiZXhwIjoxNzI3NTU1MDU3fQ.ksvVyCPF51113AjGsK4pSJwYXDuWTyifNPoVjxIW33A
 Content-Type: application/json
 
 {
-  "courseName":"GD",
+  "courseName":"Graphics Design",
   "duration":"6 month",
-  "description":"GD description",
-  "price": 3000,
+  "description":"Master the art of full-stack web development with our MERN Stack Online Course. Designed for aspiring developers, this course covers MongoDB, Express.js, React.js, and Node.js, giving you the tools to build robust and scalable web applications. Our online platform provides interactive lessons, real-time coding challenges, and hands-on projects, allowing you to learn at your own pace from the comfort of your home. Whether you’re a beginner or looking to upskill, our expert instructors will guide you through every step of the development process.",
+  "price": 6000,
   "courseRegistrationStatus": "OnRegistration",
-  "learningMode":"InPerson",
-  "spotLimit": 3,
+  "learningMode":"Online",
   "schedule": {
      "startDate":"2024-09-20",
      "endDate":"2025-11-20",
-     "dayOfWeek":[2,4,6],
+     "dayOfWeek":[1,3,5],
      "time":"12:00:00"
   }
 }
