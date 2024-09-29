@@ -82,7 +82,7 @@ exports.SignUp = async (req, res) => {
 exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body
-    const admin = Admin.findOne({ email })
+    const admin = await Admin.findOne({ email })
     if (!admin) {
       return res.status(404).send("Incorrect email or password.")
     }
@@ -91,7 +91,7 @@ exports.Login = async (req, res) => {
     if (isMatch) {
       const adminInfo = { role: admin.role }
       const accessToken = jwt.sign(adminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" })
-      return res.json({ message: `Welcome, ${admin.name}!`, accessToken });
+      return res.json({ message: `Welcome, ${admin.username}!`, accessToken, role: admin.role });
     } else {
       return res.status(401).send("Incorrect email or password. Please try again.")
     }
