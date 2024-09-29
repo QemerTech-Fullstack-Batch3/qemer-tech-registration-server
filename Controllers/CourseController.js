@@ -24,12 +24,8 @@ exports.CreateCourse = async (req, res) => {
     if(course){
       return res.status(400).send('This course alreay exists.')
     }
-
-    if (courseRegistrationStatus === "ended") {
-      courseStatus = "InActive"
-    } else {
-      courseStatus = "Active"
-    }
+    
+    const courseStatus = courseRegistrationStatus === "ended" ? "InActive" : "Active";
 
     const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus,learningMode, spotLimit })
 
@@ -85,24 +81,40 @@ exports.GetCourseInfo = async (req, res) => {
 exports.EditCourse = async (req, res) => {
   try {
     if (!["Admin","SuperAdmin"].includes(req.user.role)){
-      res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')
+      return res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')
     }
-    const { courseName, duration, description, price, schedule } = req.body
+    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, schedule } = req.body
     const courseId = req.params.id
     const course = await Course.findById(courseId)
     if (!course) {
       return res.status(404).send("Course not found")
     }
 
-    const editCourse = await Course.findByIdAndUpdate(
+    const courseStatus = courseRegistrationStatus === "ended" ? "InActive" : "Active";
+
+    const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
-      { courseName, duration, description, price, schedule },
+      { courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit },
       { new: true }
     )
-    res.status(200).send(editCourse)
+
+    if (schedule) {
+      await Schedule.findOneAndUpdate(
+        { courseId },
+        {
+          startDate: schedule.startDate,
+          endDate: schedule.endDate,
+          dayOfWeek: schedule.dayOfWeek,
+          time: schedule.time
+        },
+        { upsert: true, new: true }
+      )
+    }
+
+    res.status(200).send(updatedCourse)
   } catch (error) {
     console.error("Error while updating a course: ", error)
-    res.status(501).send("An error occured updating a course")
+    res.status(500).send("An error occurred updating a course")
   }
 }
 
@@ -128,14 +140,11 @@ exports.EditCourse = async (req, res) => {
 exports.UpdateCourseStatus = async (req, res) => {
   const {courseId} = req.params
   try {
-    const course = await Course.findById(courseId)
+    const course = await Course.findById({courseId})
     if(!course){
       return res.status(404).send("Course not found.")
     }
     const currentRegistrations = await Register.countDocuments({courseId})
-    // if (currentRegistrations >= course.spotLimit){
-    //   return res.status(400).send("The course has reached its spot limit. No more students can register.")
-    // }
     if (currentRegistrations >= course.spotLimit) {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
       return res.send("Course status updated to OnProgress");
@@ -145,10 +154,9 @@ exports.UpdateCourseStatus = async (req, res) => {
     res.send("Course status remain unchanged")
   } catch (error) {
     console.error("Error while updating course status", error)
-    res.status(501).send("An error occured updating a course status")
+    res.status(500).send("An error occurred updating a course status")
   }
 }
-
 exports.DeleteCourseCollection = async (req, res) => {
   try {
     await Course.deleteMany();
