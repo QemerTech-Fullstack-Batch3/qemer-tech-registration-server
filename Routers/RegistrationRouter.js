@@ -16,4 +16,4 @@ router.get('/getregistrationinfo/:id', GetStudentRegistrationInfo)
 router.delete('/deleteregisters/:id', authenticateToken, DeleteRegistration)
 router.delete('/deleteregistrationcollection', authenticateToken, DeleteRegistrationCollection)
 
-module.exports = router
+module.exports = router 

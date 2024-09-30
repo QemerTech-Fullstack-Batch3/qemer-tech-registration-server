@@ -16,7 +16,7 @@ exports.RegisterForCourse = async (req, res) => {
     if(course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit){
       return res.send("The course has reached its spot limit. No more students can register.")
     }
-
+ 
     // student check
     const existingStudent = await Registration.findOne({
       courseId: courseId, 

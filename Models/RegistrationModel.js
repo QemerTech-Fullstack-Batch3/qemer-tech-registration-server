@@ -15,7 +15,7 @@ const RegistrationSchema = mongoose.Schema({
     required: true,
     unique: true
   },
-  havePc: {
+  havePc: { 
     type: String,
     enum: ["Yes", "No"],
     required: true

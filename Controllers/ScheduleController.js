@@ -17,7 +17,7 @@ const daysOfWeekMap = {
 exports.CreateSchedule = async (req, res) => {
   try {
     const { courseId, startDate, endDate, dayOfWeek, time } = req.body
-
+ 
     // course check
     const courseIdObj = new mongoose.Types.ObjectId(courseId);
     const course = await Course.findById(courseIdObj)

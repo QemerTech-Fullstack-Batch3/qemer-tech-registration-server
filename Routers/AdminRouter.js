@@ -21,4 +21,4 @@ router.patch('/assignrole/:adminId', authenticateToken, AssignRole)
 router.get('/getadmins', authenticateToken, GetAdmins)
 router.get('/getregistrars', authenticateToken, GetRegistrars)
 
-module.exports = router
+module.exports = router 

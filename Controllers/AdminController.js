@@ -154,7 +154,7 @@ exports.GetAdmins = async (req, res) => {
   } catch (error) {
     console.error("Error getting admins: ", error)
     res.status(500).send("An error occurrd while fetching admins.")
-  }
+  } 
 
 }
 exports.GetRegistrars = async (req, res) => {

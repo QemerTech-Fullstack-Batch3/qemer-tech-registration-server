@@ -21,4 +21,4 @@ router.patch('/updatestatus/:courseId', UpdateCourseStatus)
 // router.delete('/deletecourse/:id', DeleteCourse)
 router.delete('/deletecoursecollection', DeleteCourseCollection) 
 
-module.exports = router
+module.exports = router 

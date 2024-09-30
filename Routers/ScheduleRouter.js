@@ -16,3 +16,4 @@ router.get('/getscheduleofacourse/:id', GetScheduleOfACourse)
 router.delete('/deleteschedulecollection', DeleteScheduleCollection)
 
 module.exports = router 
+ 
