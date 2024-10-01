@@ -65,13 +65,7 @@ exports.GetCourseInfo = async (req, res) => {
       return res.status(404).send("Course not found.")
     }
 
-    const schedule = await Schedule.findOne({ courseId: req.params.id })
-    const formattedSchedule = {
-      ...schedule.toObject(),
-      dayOfWeek: schedule.dayOfWeek.map(dayNumber => daysOfWeekMap[dayNumber]),
-    };
-
-    res.status(200).send({ course: course, schedule: formattedSchedule })
+    res.status(200).send({ course: course})
   } catch (error) {
     console.error('Error while fetching a specific course:', error)
     res.status(501).send("An error occured while getting a specific course info")
