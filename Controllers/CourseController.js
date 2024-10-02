@@ -18,36 +18,27 @@ exports.CreateCourse = async (req, res) => {
       return res.status(403).send("Access denied. Only super admins can perform this action.")
     }
     
-    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, schedule } = req.body
+    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit } = req.body
 
     const course = await Course.findOne({courseName})
     if(course){
-      return res.status(400).send('This course alreay exists.')
+      return res.status(400).send('This course already exists.')
     }
     
     const courseStatus = courseRegistrationStatus === "ended" ? "InActive" : "Active";
 
-    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus,learningMode, spotLimit })
+    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit })
 
-    // schedule 
-    const newSchedule = new Schedule({
-      courseId: newCourse._id,
-      startDate: schedule.startDate,
-      endDate: schedule.endDate,
-      dayOfWeek: schedule.dayOfWeek,
-      time: schedule.time
-    })
-    const [savedCourse, savedSchedule] = await Promise.all([
-      newCourse.save(),
-      newSchedule.save()
-    ])
+    const savedCourse = await newCourse.save()
 
-    res.status(201).send({ course: savedCourse, schedule: savedSchedule })
+    res.status(201).send({ course: savedCourse })
   } catch (error) {
     console.error("Error creating course:", error)
-    res.status(500).send("An error occured while creating a course")
+    res.status(500).send("An error occurred while creating a course")
   }
 }
+
+
 exports.GetCourses = async (req, res) => {
   try {
     const courses = await Course.find()
@@ -65,13 +56,7 @@ exports.GetCourseInfo = async (req, res) => {
       return res.status(404).send("Course not found.")
     }
 
-    const schedule = await Schedule.findOne({ courseId: req.params.id })
-    const formattedSchedule = {
-      ...schedule.toObject(),
-      dayOfWeek: schedule.dayOfWeek.map(dayNumber => daysOfWeekMap[dayNumber]),
-    };
-
-    res.status(200).send({ course: course, schedule: formattedSchedule })
+    res.status(200).send({ course: course})
   } catch (error) {
     console.error('Error while fetching a specific course:', error)
     res.status(501).send("An error occured while getting a specific course info")

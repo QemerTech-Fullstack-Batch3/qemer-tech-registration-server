@@ -6,6 +6,9 @@ const ScheduleSchema = mongoose.Schema({
     ref: 'Course',
     required: true 
   },
+  courseName: {
+    type: String
+  },
   startDate: {
     type: Date,
     required: true  

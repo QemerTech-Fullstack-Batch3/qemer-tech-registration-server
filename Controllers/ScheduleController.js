@@ -22,8 +22,6 @@ exports.CreateSchedule = async (req, res) => {
     const courseIdObj = new mongoose.Types.ObjectId(courseId);
     const course = await Course.findById(courseIdObj)
     if (!course) return res.status(404).send("Course not found")
-    const courseInSchedule = await Schedule.findById(courseId)
-    if (courseInSchedule) return res.send("This course already have a schedule.")
 
     // start and end date check
     const startDateEdit = new Date(startDate)
@@ -48,8 +46,10 @@ exports.CreateSchedule = async (req, res) => {
     if (!timeRegex.test(time)) {
       return res.status(400).send("Invalid time format");
     }
+
     const schedule = new Schedule({
       courseId: courseIdObj,
+      courseName: course.courseName,
       startDate: startDateEdit,
       endDate: endDateEdit,
       dayOfWeek,
@@ -111,31 +111,55 @@ exports.GetSchedules = async (req, res) => {
 }
 exports.EditSchedule = async (req, res) => {
   try {
-    const {courseId, startDate, endDate, dayOfWeek, time} = req.body
-    const scheduleId = req.params.id 
-    const schedule = await findById(scheduleId)
-    if(!schedule) return res.status(404).send("Schedule not found")
+    const { courseId, startDate, endDate, dayOfWeek, time } = req.body;
+    const scheduleId = req.params.id;
 
-    const editSchedule = await Schedule.findByIdAndUpdate(
+    // Validate input data
+    if (!courseId || !startDate || !endDate || !Array.isArray(dayOfWeek) || dayOfWeek.length === 0 || !time) {
+      return res.status(400).send("Invalid input data");
+    }
+
+    // Check if schedule exists
+    const schedule = await Schedule.findById(scheduleId);
+    if (!schedule) return res.status(404).send("Schedule not found");
+
+    // Check if course exists
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).send("Course not found");
+
+    const editedSchedule = await Schedule.findByIdAndUpdate(
       scheduleId,
-      {courseId, startDate, endDate, dayOfWeek, time},
-      {new: true}
-    ) 
-    res.status(200).send(editSchedule)
+      { 
+        courseId, 
+        startDate, 
+        endDate, 
+        dayOfWeek: dayOfWeek.map(Number), 
+        time 
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json(editedSchedule);
   } catch (error) {
-    console.error("Error editing schedule: ", error)
-    res.status(500).send("An error occured while editing schedule")
+    console.error("Error editing schedule: ", error);
+    res.status(500).send("An error occurred while editing schedule");
   }
-}
+};
 
 exports.DeleteSchedule = async (req, res) => {
   try {
-    
+    const scheduleId = req.params.id;
+    const deletedSchedule = await Schedule.findByIdAndDelete(scheduleId);
+    if (!deletedSchedule) {
+      return res.status(404).send('Schedule not found.');
+    }
+    res.status(200).send("Schedule deleted successfully.");
   } catch (error) {
-    console.error("Error deleting schedule: ", error)
-    res.status(500).send("An error occured while deleting schedule")
+    console.error("Error deleting schedule: ", error);
+    res.status(500).send("An error occurred while deleting schedule");
   }
-}
+};
+
 
 
 exports.DeleteScheduleCollection = async (req, res) => {
