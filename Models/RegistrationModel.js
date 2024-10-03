@@ -25,10 +25,6 @@ const RegistrationSchema = mongoose.Schema({
     enum: ["Addis Ababa", "Outside Addis Ababa"],
     required: true
   },
-  courseId: {
-    type: String,
-    required: true 
-  },
   registrationDate: {
     type: Date,
     default: Date.now,
@@ -37,7 +33,11 @@ const RegistrationSchema = mongoose.Schema({
     type: String,
     enum: ["Paid", "NotPaid"],
     default: "NotPaid",
-  }
+  },
+  courseId: {
+    type: String,
+    required: true 
+  },
 }, { timestamps: true })
 
 const Registration = mongoose.model("Registration", RegistrationSchema)
