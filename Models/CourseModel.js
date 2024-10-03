@@ -11,17 +11,17 @@ const CourseSchema = mongoose.Schema({
   },
   description: {
     type: String, 
-    required: true
+    required: true 
   },
   price: {
     type: Number,
     required: true
-  },
+  }, 
   courseStatus: {
-    type: String,
+    type: String, 
     enum: ["Active","InActive"],
     default: "Active"
-  },
+  }, 
   courseRegistrationStatus: {
     type: String,
     enum: ["OnRegistration", "OnProgress", "ended"],
