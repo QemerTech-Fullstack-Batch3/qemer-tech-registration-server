@@ -1,9 +1,9 @@
 POST http://localhost:5000/course/createcourse
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzU1MzI1NywiZXhwIjoxNzI3NTU1MDU3fQ.ksvVyCPF51113AjGsK4pSJwYXDuWTyifNPoVjxIW33A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTcyNzgwMjYxNiwiZXhwIjoxNzI3ODA0NDE2fQ.9AVO4xeO6rDlkFIXdVbk4smXM74JucJHILarXhSQ8ho
 Content-Type: application/json
 
 {
-  "courseName":"MERN Stack Online",
+  "courseName":"MERN Stack",
   "duration":"6 month",
   "description":"Dive deep into the world of full-stack web development with our MERN Stack In-Person Course. Join us at our campus for face-to-face training on MongoDB, Express.js, React.js, and Node.js. This course is tailored for individuals who prefer hands-on, collaborative learning environments. With in-class coding sessions, real-world projects, and personalized guidance from experienced developers, you'll build the skills to create powerful web applications. Perfect for both beginners and professionals seeking to refine their skills in a structured classroom setting",
   "price": 6000,
@@ -25,7 +25,7 @@ GET http://localhost:5000/course/getcourses
 
 ###
 
-GET http://localhost:5000/course/getspecificcourse/66f86016808802a6614fde65
+GET http://localhost:5000/course/getspecificcourse/66fc2d79c89101d5ba27b06c
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3
