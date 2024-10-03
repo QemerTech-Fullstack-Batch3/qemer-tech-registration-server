@@ -41,7 +41,15 @@ exports.RegisterForCourse = async (req, res) => {
       console.error("Error in updating course status:", error.response ? error.response.data : error.message);
     }
 
-    res.status(201).json({ message: "Student successfully registered for the course!", registration: newRegistration });
+    const successMessage = {
+      title: "Registration Successful!",
+      message: "Thank you for registering. We've received your information and will contact you shortly with further details.",
+      nextSteps: [
+        "Stay tuned we will contact you."
+      ]
+    };
+    
+    res.status(201).json({ message: "Registration successful", data: successMessage });
 
   } catch (error) {
     console.error("Error registering for course: ", error)

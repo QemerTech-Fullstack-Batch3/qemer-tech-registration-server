@@ -123,25 +123,25 @@ exports.EditCourse = async (req, res) => {
 // }
 
 exports.UpdateCourseStatus = async (req, res) => {
-  const {courseId} = req.params
+  const { courseId } = req.params;
   try {
-    const course = await Course.findById({courseId})
-    if(!course){
-      return res.status(404).send("Course not found.")
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).send("Course not found.");
     }
-    const currentRegistrations = await Register.countDocuments({courseId})
+    const currentRegistrations = await Register.countDocuments({ courseId });
     if (currentRegistrations >= course.spotLimit) {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
       return res.send("Course status updated to OnProgress");
-    } else{
+    } else {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnRegistration" }, { new: true });
     }
-    res.send("Course status remain unchanged")
+    res.send("Course status remain unchanged");
   } catch (error) {
-    console.error("Error while updating course status", error)
-    res.status(500).send("An error occurred updating a course status")
+    console.error("Error while updating course status", error);
+    res.status(500).send("An error occurred updating a course status");
   }
-}
+};
 exports.DeleteCourseCollection = async (req, res) => {
   try {
     await Course.deleteMany();

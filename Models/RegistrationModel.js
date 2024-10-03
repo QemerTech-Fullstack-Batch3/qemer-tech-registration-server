@@ -23,7 +23,7 @@ const RegistrationSchema = mongoose.Schema({
   CityOfResidence: {
     type: String,
     enum: ["Addis Ababa", "Outside Addis Ababa"],
-    required: true
+    required: function() { return this.learningMode === 'InPerson'; }
   },
   registrationDate: {
     type: Date,
