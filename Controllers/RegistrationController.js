@@ -12,18 +12,17 @@ exports.RegisterForCourse = async (req, res) => {
     if(!course){
       return res.status(404).send("Course not found.")
     }
-    const currentRegistrations = await Registration.countDocuments({courseId: courseId})
-    if(course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit){
-      return res.send("The course has reached its spot limit. No more students can register.")
+    const currentRegistrations = await Registration.countDocuments({ courseId });
+    if (course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit) {
+      return res.status(409).json({ message: "The course has reached its spot limit. No more students can register." });
     }
- 
     // student check
     const existingStudent = await Registration.findOne({
       courseId: courseId, 
       phone: phone
     })
     if(existingStudent){
-      return res.status(409).send("Student alreay registred for this course")
+      return res.status(409).send("Student already registered for this course")
     }
   
     const newRegistration = new Registration({
@@ -35,10 +34,13 @@ exports.RegisterForCourse = async (req, res) => {
       courseId
     })
     await newRegistration.save()
-    try {
-      await axios.patch(`http://localhost:5000/course/updateStatus/${courseId}`);
-    } catch (error) {
-      console.error("Error in updating course status:", error.response ? error.response.data : error.message);
+
+    if(course.learningMode === "InPerson") {
+      try {
+        await axios.patch(`http://localhost:5000/course/updateStatus/${courseId}`);
+      } catch (error) {
+        console.error("Error in updating course status:", error.response ? error.response.data : error.message);
+      }
     }
 
     const successMessage = {
@@ -52,8 +54,8 @@ exports.RegisterForCourse = async (req, res) => {
     res.status(201).json({ message: "Registration successful", data: successMessage });
 
   } catch (error) {
-    console.error("Error registering for course: ", error)
-    res.status(500).send("An error occurred while registering")
+    console.error("Error in registration:", error);
+    res.status(500).json({ message: "An error occurred during registration", error: error.message });
   }
 }
 

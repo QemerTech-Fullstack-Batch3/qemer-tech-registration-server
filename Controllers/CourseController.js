@@ -103,24 +103,6 @@ exports.EditCourse = async (req, res) => {
   }
 }
 
-// exports.DeleteCourse = async (req, res) => {
-//   try {
-//     const courseId = req.params.id
-//     const course = Course.findById(courseId)
-//     if (!course) {
-//       return res.status(404).send("Course not found")
-//     }
-
-//     const schedule = Schedule.findOne({ courseId: req.params.id })
-//     if (!schedule) { }
-//     await Course.findByIdAndDelete(courseId)
-//     await Schedule.deleteMany({ courseId })
-//     res.status(200).send("Course Succesfully deleted.")
-//   } catch (error) {
-//     console.error("Error while deleting a course", error)
-//     res.status(501).send("An error occured deleting a course")
-//   }
-// }
 
 exports.UpdateCourseStatus = async (req, res) => {
   const { courseId } = req.params;
@@ -129,7 +111,7 @@ exports.UpdateCourseStatus = async (req, res) => {
     if (!course) {
       return res.status(404).send("Course not found.");
     }
-    const currentRegistrations = await Register.countDocuments({ courseId });
+    const currentRegistrations = await Register.countDocuments(courseId);
     if (currentRegistrations >= course.spotLimit) {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
       return res.send("Course status updated to OnProgress");

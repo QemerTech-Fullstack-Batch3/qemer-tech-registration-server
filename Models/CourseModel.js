@@ -24,8 +24,9 @@ const CourseSchema = mongoose.Schema({
   }, 
   courseRegistrationStatus: {
     type: String,
-    enum: ["OnRegistration", "OnProgress", "ended"],
-    required: true
+    enum: ['OnRegistration', 'OnProgress', 'ended'],
+    default: 'OnRegistration',
+    required: function() { return this.learningMode === 'InPerson'; }
   },
   learningMode: {
     type: String,
