@@ -114,26 +114,47 @@ exports.EditSchedule = async (req, res) => {
     const { courseId, startDate, endDate, dayOfWeek, time } = req.body;
     const scheduleId = req.params.id;
 
-    // Validate input data
-    if (!courseId || !startDate || !endDate || !Array.isArray(dayOfWeek) || dayOfWeek.length === 0 || !time) {
-      return res.status(400).send("Invalid input data");
-    }
-
     // Check if schedule exists
     const schedule = await Schedule.findById(scheduleId);
     if (!schedule) return res.status(404).send("Schedule not found");
 
-    // Check if course exists
-    const course = await Course.findById(courseId);
+    // Course check
+    const courseIdObj = new mongoose.Types.ObjectId(courseId);
+    const course = await Course.findById(courseIdObj);
     if (!course) return res.status(404).send("Course not found");
+
+    // Date validation
+    const startDateEdit = new Date(startDate);
+    const endDateEdit = new Date(endDate);
+    if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
+      return res.status(400).send("Invalid start or end date");
+    }
+    if (endDateEdit <= startDateEdit) {
+      return res.status(400).send("End date must be after start date");
+    }
+
+    // Day of week validation
+    if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
+      return res.status(400).send("At least one day of the week is required");
+    }
+    if (dayOfWeek.some(day => day < 1 || day > 7)) {
+      return res.status(400).send("Invalid dayOfWeek value");
+    }
+
+    // Time validation
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (!timeRegex.test(time)) {
+      return res.status(400).send("Invalid time format");
+    }
 
     const editedSchedule = await Schedule.findByIdAndUpdate(
       scheduleId,
       { 
-        courseId, 
-        startDate, 
-        endDate, 
-        dayOfWeek: dayOfWeek.map(Number), 
+        courseId: courseIdObj,
+        courseName: course.courseName,
+        startDate: startDateEdit,
+        endDate: endDateEdit,
+        dayOfWeek: dayOfWeek.map(Number),
         time 
       },
       { new: true, runValidators: true }
@@ -142,10 +163,9 @@ exports.EditSchedule = async (req, res) => {
     res.status(200).json(editedSchedule);
   } catch (error) {
     console.error("Error editing schedule: ", error);
-    res.status(500).send("An error occurred while editing schedule");
+    res.status(500).send(`An error occurred while editing schedule: ${error.message}`);
   }
 };
-
 exports.DeleteSchedule = async (req, res) => {
   try {
     const scheduleId = req.params.id;
