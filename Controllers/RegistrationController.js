@@ -31,7 +31,8 @@ exports.RegisterForCourse = async (req, res) => {
       phone,
       havePc,
       CityOfResidence,
-      courseId
+      courseId,
+      learningMode: course.learningMode
     })
     await newRegistration.save()
 
