@@ -8,7 +8,7 @@ exports.RegisterForCourse = async (req, res) => {
     const {fullName, gender, phone, havePc, CityOfResidence, courseId} = req.body
 
     // course check
-    const course = await Course.findOne({_id: courseId}) 
+    const course = await Course.findById(courseId)
     if(!course){
       return res.status(404).send("Course not found.")
     }

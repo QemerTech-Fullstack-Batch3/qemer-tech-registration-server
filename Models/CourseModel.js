@@ -24,9 +24,9 @@ const CourseSchema = mongoose.Schema({
   }, 
   courseRegistrationStatus: {
     type: String,
-    enum: ['OnRegistration', 'OnProgress', 'ended'],
-    default: 'OnRegistration',
-    required: function() { return this.learningMode === 'InPerson'; }
+    enum: ['On Registration', 'On Progress', 'Ended'],
+    default: 'On Registration',
+    required: true
   },
   learningMode: {
     type: String,
@@ -34,11 +34,32 @@ const CourseSchema = mongoose.Schema({
     required: true
   },
   spotLimit: {
-    type: Number
+    type: Number,
+    required: function() {return this.learningMode === 'InPerson'}
   },
-  scheduleId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Schedule'
+  startDate: {
+    type: Date,
+    required: true 
+  },
+  endDate: {
+    type: Date,
+    required: true 
+  },
+  dayOfWeek: {  
+    type: [Number], 
+    required: true,
+    enum: [1,2,3,4,5,6,7],
+    validate: {
+      validator: (value) => {
+        return value.length > 0;
+      },
+      message: 'At least one day of the week must be selected',
+    }
+  },
+  time: {
+    type: String,
+    required: true,
+    match: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
   },
 }, {timestamps: true})
 

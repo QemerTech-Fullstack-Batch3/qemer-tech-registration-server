@@ -14,7 +14,7 @@ const ScheduleSchema = mongoose.Schema({
     required: true  
   },
   endDate: {
-    type: Date,
+    type: Date,   
     required: true 
   },
   dayOfWeek: {  
@@ -32,7 +32,7 @@ const ScheduleSchema = mongoose.Schema({
     type: String,
     required: true,
     match: /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
-  },
+  }
 }, { timestamps: true })
 
 const Schedule = mongoose.model("Schedule", ScheduleSchema)

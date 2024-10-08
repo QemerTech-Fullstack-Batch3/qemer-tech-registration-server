@@ -11,23 +11,64 @@ const daysOfWeekMap = {
   6: 'Saturday',
   7: 'Sunday',
 };
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
 
 exports.CreateCourse = async (req, res) => {
   try {
-    if(!["Admin","SuperAdmin"].includes(req.user.role)){
+    if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send("Access denied. Only super admins can perform this action.")
     }
-    
-    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit } = req.body
 
-    const course = await Course.findOne({courseName})
-    if(course){
-      return res.status(400).send('This course already exists.')
+    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, startDate, endDate, dayOfWeek, time } = req.body
+
+    const courseStatus = courseRegistrationStatus === "Ended" ? "InActive" : "Active";
+
+    const startDateEdit = new Date(startDate)
+    const endDateEdit = new Date(endDate)
+    
+    if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
+      return res.status(400).send("Invalid start or end date");
     }
-    
-    const courseStatus = courseRegistrationStatus === "ended" ? "InActive" : "Active";
+    if (endDate <= startDate) {
+      return res.status(400).send("End date must be after start date");
+    }
 
-    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit })
+    // dayofweek check
+    if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
+      return res.status(400).send("At least one day of the week is required");
+    }
+    if (dayOfWeek.some(day => day < 1 || day > 7)) {
+      return res.status(400).send("Invalid dayOfWeek value");
+    }
+
+    // time
+    let formattedTime = time;
+    if (time.length === 5) {
+      formattedTime = time + ':00';
+    }
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (!timeRegex.test(formattedTime)) {
+      return res.status(400).send("Invalid time format");
+    }
+
+    // day check 
+    const currentDate = new Date()
+    let courseRegistrationStatusFormatted;
+    if(currentDate > endDateEdit){
+      courseRegistrationStatusFormatted = 'Ended'
+    } else if (currentDate >= startDateEdit){
+      courseRegistrationStatusFormatted = 'On Progress'
+    } else {
+      courseRegistrationStatusFormatted = 'On Registration'
+    }
+
+    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus: courseRegistrationStatusFormatted, learningMode, spotLimit, startDate:startDateEdit, endDate: endDateEdit, dayOfWeek, time: formattedTime })
 
     const savedCourse = await newCourse.save()
 
@@ -42,21 +83,36 @@ exports.CreateCourse = async (req, res) => {
 exports.GetCourses = async (req, res) => {
   try {
     const courses = await Course.find()
-    res.status(200).send(courses)
+    const formattedCourses = courses.map((course) => ({
+      ...course.toObject(),
+      startDate: formatDate(course.startDate),
+      endDate: formatDate(course.endDate),
+      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+    }))
+    res.status(200).send(formattedCourses)
   } catch (error) {
     console.error('Error fetching courses:', error)
     res.status(501).send(error)
   }
 }
+
 exports.GetCourseInfo = async (req, res) => {
   try {
     const courseId = req.params.id
     const course = await Course.findById(courseId)
+
     if (!course) {
       return res.status(404).send("Course not found.")
     }
 
-    res.status(200).send({ course: course})
+    const formattedCourse = {
+      ...course.toObject(),
+      startDate: formatDate(course.startDate),
+      endDate: formatDate(course.endDate),
+      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+    }
+
+    res.status(200).send({ course: formattedCourse })
   } catch (error) {
     console.error('Error while fetching a specific course:', error)
     res.status(501).send("An error occured while getting a specific course info")
@@ -65,36 +121,51 @@ exports.GetCourseInfo = async (req, res) => {
 
 exports.EditCourse = async (req, res) => {
   try {
-    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+    if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')
     }
-    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, schedule } = req.body
+    const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, startDate, endDate, dayOfWeek, time } = req.body
+
     const courseId = req.params.id
     const course = await Course.findById(courseId)
     if (!course) {
       return res.status(404).send("Course not found")
     }
 
-    const courseStatus = courseRegistrationStatus === "ended" ? "InActive" : "Active";
+    if (startDate || endDate) {
+      const startDateEdit = new Date(startDate)
+      const endDateEdit = new Date(endDate)
+      if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
+        return res.status(400).send("Invalid start or end date");
+      }
+      if (endDate <= startDate) {
+        return res.status(400).send("End date must be after start date");
+      }
+
+      // dayofweek check
+      if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
+        return res.status(400).send("At least one day of the week is required");
+      }
+      if (dayOfWeek.some(day => day < 1 || day > 7)) {
+        return res.status(400).send("Invalid dayOfWeek value");
+      }
+    }
+
+    if (time) {
+      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+      if (!timeRegex.test(time)) {
+        return res.status(400).send("Invalid time format");
+      }
+    }
+
+    const courseStatus = courseRegistrationStatus === "Ended" ? "InActive" : "Active";
+
 
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
-      { courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit },
+      { courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit, startDate, endDate, dayOfWeek, time },
       { new: true }
     )
-
-    if (schedule) {
-      await Schedule.findOneAndUpdate(
-        { courseId },
-        {
-          startDate: schedule.startDate,
-          endDate: schedule.endDate,
-          dayOfWeek: schedule.dayOfWeek,
-          time: schedule.time
-        },
-        { upsert: true, new: true }
-      )
-    }
 
     res.status(200).send(updatedCourse)
   } catch (error) {
@@ -111,19 +182,26 @@ exports.UpdateCourseStatus = async (req, res) => {
     if (!course) {
       return res.status(404).send("Course not found.");
     }
-    const currentRegistrations = await Register.countDocuments(courseId);
-    if (currentRegistrations >= course.spotLimit) {
-      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnProgress" }, { new: true });
-      return res.send("Course status updated to OnProgress");
+
+    const currentRegistrations = await Registration.countDocuments({ courseId: courseId });
+    const currentDate = new Date();
+
+    if (currentDate > new Date(course.endDate)) {
+      await course.findByIdAndUpdate(courseId, { status: "Ended" }, { new: true });
+      return res.send("Course status updated to Ended");
+    } else if (currentRegistrations >= course.spotLimit || currentDate >= new Date(course.startDate)) {
+      await course.findByIdAndUpdate(courseId, { status: "On Progress" }, { new: true });
+      return res.send("Course status updated to On Progress");
     } else {
-      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "OnRegistration" }, { new: true });
+      await course.findByIdAndUpdate(courseId, { status: "On Registration" }, { new: true });
+      return res.send("Course status updated to On Registration");
     }
-    res.send("Course status remain unchanged");
   } catch (error) {
     console.error("Error while updating course status", error);
     res.status(500).send("An error occurred updating a course status");
   }
 };
+
 exports.DeleteCourseCollection = async (req, res) => {
   try {
     await Course.deleteMany();

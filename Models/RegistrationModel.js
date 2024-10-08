@@ -35,9 +35,15 @@ const RegistrationSchema = mongoose.Schema({
     default: "NotPaid",
   },
   courseId: {
-    type: String,
-    required: true 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    required: true
   },
+  scheduleId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Schedule',
+    required: true
+  }
 }, { timestamps: true })
 
 const Registration = mongoose.model("Registration", RegistrationSchema)

@@ -5,7 +5,7 @@ const {
   CreateSchedule,
   GetSchedule,
   GetSchedules,
-  GetScheduleOfACourse,
+  GetSchedulesOfACourse,
   DeleteScheduleCollection,
   EditSchedule,
   DeleteSchedule
@@ -14,7 +14,7 @@ const {
 router.post('/createschedule', CreateSchedule)
 router.get('/getschedules', GetSchedules)
 router.get('/getschedule/:id', GetSchedule)
-router.get('/getscheduleofacourse/:id', GetScheduleOfACourse)
+router.get('/getschedulesofacourse/:id', GetSchedulesOfACourse)
 router.patch('/updateschedule/:id', EditSchedule)
 router.delete('/deleteschedule/:id', DeleteSchedule)
 router.delete('/deleteschedulecollection', DeleteScheduleCollection)
