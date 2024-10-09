@@ -1,6 +1,5 @@
 const Course = require('../Models/CourseModel')
-const Schedule = require('../Models/ScheduleModel')
-const Register = require('../Models/RegistrationModel')
+const Registration = require('../Models/RegistrationModel');
 
 const daysOfWeekMap = {
   1: 'Monday',
@@ -27,11 +26,9 @@ exports.CreateCourse = async (req, res) => {
 
     const { courseName, duration, description, price, courseRegistrationStatus, learningMode, spotLimit, startDate, endDate, dayOfWeek, time } = req.body
 
-    const courseStatus = courseRegistrationStatus === "Ended" ? "InActive" : "Active";
-
     const startDateEdit = new Date(startDate)
     const endDateEdit = new Date(endDate)
-    
+
     if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
       return res.status(400).send("Invalid start or end date");
     }
@@ -60,15 +57,17 @@ exports.CreateCourse = async (req, res) => {
     // day check 
     const currentDate = new Date()
     let courseRegistrationStatusFormatted;
-    if(currentDate > endDateEdit){
+    if (currentDate > endDateEdit) {
       courseRegistrationStatusFormatted = 'Ended'
-    } else if (currentDate >= startDateEdit){
+    } else if (currentDate >= startDateEdit) {
       courseRegistrationStatusFormatted = 'On Progress'
     } else {
       courseRegistrationStatusFormatted = 'On Registration'
     }
 
-    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus: courseRegistrationStatusFormatted, learningMode, spotLimit, startDate:startDateEdit, endDate: endDateEdit, dayOfWeek, time: formattedTime })
+    const courseStatus = courseRegistrationStatusFormatted === "Ended" ? "InActive" : "Active";
+
+    const newCourse = new Course({ courseName, duration, description, price, courseStatus, courseRegistrationStatus: courseRegistrationStatusFormatted, learningMode, spotLimit, startDate: startDateEdit, endDate: endDateEdit, dayOfWeek, time: formattedTime })
 
     const savedCourse = await newCourse.save()
 
@@ -132,23 +131,33 @@ exports.EditCourse = async (req, res) => {
       return res.status(404).send("Course not found")
     }
 
-    if (startDate || endDate) {
-      const startDateEdit = new Date(startDate)
-      const endDateEdit = new Date(endDate)
-      if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
-        return res.status(400).send("Invalid start or end date");
-      }
-      if (endDate <= startDate) {
-        return res.status(400).send("End date must be after start date");
-      }
+    const startDateEdit = new Date(startDate)
+    const endDateEdit = new Date(endDate)
 
-      // dayofweek check
-      if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
-        return res.status(400).send("At least one day of the week is required");
-      }
-      if (dayOfWeek.some(day => day < 1 || day > 7)) {
-        return res.status(400).send("Invalid dayOfWeek value");
-      }
+    if (isNaN(startDateEdit.getTime()) || isNaN(endDateEdit.getTime())) {
+      return res.status(400).send("Invalid start or end date");
+    }
+    if (endDate <= startDate) {
+      return res.status(400).send("End date must be after start date");
+    }
+
+    // dayofweek check
+    if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
+      return res.status(400).send("At least one day of the week is required");
+    }
+    if (dayOfWeek.some(day => day < 1 || day > 7)) {
+      return res.status(400).send("Invalid dayOfWeek value");
+    }
+
+  
+    // time
+    let formattedTime = time;
+    if (time.length === 5) {
+      formattedTime = time + ':00';
+    }
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (!timeRegex.test(formattedTime)) {
+      return res.status(400).send("Invalid time format");
     }
 
     if (time) {
@@ -158,12 +167,22 @@ exports.EditCourse = async (req, res) => {
       }
     }
 
-    const courseStatus = courseRegistrationStatus === "Ended" ? "InActive" : "Active";
+    const currentDate = new Date()
+    let courseRegistrationStatusFormatted;
+    if (currentDate > endDateEdit) {
+      courseRegistrationStatusFormatted = 'Ended'
+    } else if (currentDate >= startDateEdit) {
+      courseRegistrationStatusFormatted = 'On Progress'
+    } else {
+      courseRegistrationStatusFormatted = 'On Registration'
+    }
+
+    const courseStatus = courseRegistrationStatusFormatted === "Ended" ? "InActive" : "Active";
 
 
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
-      { courseName, duration, description, price, courseStatus, courseRegistrationStatus, learningMode, spotLimit, startDate, endDate, dayOfWeek, time },
+      { courseName, duration, description, price, courseStatus, courseRegistrationStatus: courseRegistrationStatusFormatted, learningMode, spotLimit, startDate: startDateEdit, endDate: endDateEdit, dayOfWeek, time: formattedTime },
       { new: true }
     )
 
@@ -187,13 +206,13 @@ exports.UpdateCourseStatus = async (req, res) => {
     const currentDate = new Date();
 
     if (currentDate > new Date(course.endDate)) {
-      await course.findByIdAndUpdate(courseId, { status: "Ended" }, { new: true });
+      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "Ended" }, { new: true });
       return res.send("Course status updated to Ended");
     } else if (currentRegistrations >= course.spotLimit || currentDate >= new Date(course.startDate)) {
-      await course.findByIdAndUpdate(courseId, { status: "On Progress" }, { new: true });
+      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "On Progress" }, { new: true });
       return res.send("Course status updated to On Progress");
     } else {
-      await course.findByIdAndUpdate(courseId, { status: "On Registration" }, { new: true });
+      await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "On Registration" }, { new: true });
       return res.send("Course status updated to On Registration");
     }
   } catch (error) {

@@ -38,11 +38,6 @@ const RegistrationSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
     required: true
-  },
-  scheduleId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Schedule',
-    required: true
   }
 }, { timestamps: true })
 

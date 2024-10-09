@@ -10,11 +10,8 @@ const CreateSuperAdmin = async () => {
   try {
     const existingSuperAdmin = await Admin.findOne({ role: 'SuperAdmin' });
     if (existingSuperAdmin) {
-      // console.log('Super admin already exists');
       return;
     }
-
-    // Create new super admin
     const hashedPassword = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, 10);
 
     const superAdmin = new Admin({
@@ -90,7 +87,7 @@ exports.Login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, admin.password)
     if (isMatch) {
       const adminInfo = { role: admin.role }
-      const accessToken = jwt.sign(adminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" })
+      const accessToken = jwt.sign(adminInfo, process.env.TOKEN_SECRET, { expiresIn: "60m" })
       return res.json({ message: `Welcome, ${admin.username}!`, accessToken, role: admin.role });
     } else {
       return res.status(401).send("Incorrect email or password. Please try again.")
