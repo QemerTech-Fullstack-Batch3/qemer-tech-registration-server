@@ -76,6 +76,35 @@ exports.SignUp = async (req, res) => {
     res.status(500).send("An error occurred while registering the user.");
   }
 }
+
+exports.CreateAdmin = async (req, res) => {
+  const { username, email, password, role } = req.body;
+  try {
+    if (req.user.role !== 'SuperAdmin') {
+      return res.status(403).send('Access denied. Only Super Admin can do this action.');
+    }
+
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(400).send("User already exists.");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new Admin({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      isActive: true
+    });
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin created successfully!" });
+
+  } catch (error) {
+    console.error("Error creating admin: ", error);
+    res.status(500).send("An error occurred while creating admin.");
+  }
+}
 exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -97,6 +126,30 @@ exports.Login = async (req, res) => {
     res.status(500).send("An error occurred while logging admin user.");
   }
 }
+exports.ChangeAdminPassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  try {
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+      return res.status(404).send("Admin not found.");
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch) {
+      return res.status(401).send("Current password is incorrect.");
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    admin.password = hashedNewPassword;
+    await admin.save();
+
+    res.status(200).send("Password changed successfully.");
+  } catch (error) {
+    console.error("Error changing admin password: ", error);
+    res.status(500).send("An error occurred while changing admin password.");
+  }
+}
+
 exports.AssignRole = async (req, res) => {
   const { adminId } = req.params
   const { role } = req.body
@@ -144,7 +197,7 @@ exports.GetUsersInPending = async (req, res) => {
 exports.GetAdmins = async (req, res) => {
   try {
     if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only admins can perform this action.")
+      return res.status(403).send("Access denied. Only Super admins can perform this action.")
     }
     const admins = await Admin.find({ role: 'Admin' })
     res.status(200).send({ admins: admins })
