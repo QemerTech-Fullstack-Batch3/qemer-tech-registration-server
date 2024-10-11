@@ -28,67 +28,22 @@ const CreateSuperAdmin = async () => {
     console.error('Error creating super admin:', error);
   }
 }
-CreateSuperAdmin();
-
-exports.LogInSuperAdmin = async (req, res) => {
-  try {
-    const { email, password } = req.body
-    const superAdmin = await Admin.findOne({ email })
-    if (!superAdmin) {
-      return res.status(404).send("Incorrect email or password.")
-    }
-
-    const isMatch = await bcrypt.compare(password, superAdmin.password)
-    if (isMatch) {
-      const superAdminInfo = { role: superAdmin.role } 
-      const accessToken = jwt.sign(superAdminInfo, process.env.TOKEN_SECRET, { expiresIn: "30m" }) 
-      return res.json({ message: `Welcome, ${superAdmin.name}!`, accessToken });
-    } else {
-      return res.status(401).send("Incorrect email or password. Please try again.")
-    }
-  } catch (error) {
-    console.error("Error logging super admin: ", error);
-    res.status(500).send("An error occurred while logging superadmin user.");
-  }
-}
-
-exports.SignUp = async (req, res) => {
-  const { username, email, password } = req.body
-  try {
-    const existingAdmin = await Admin.findOne({ email })
-    if (existingAdmin) {
-      return res.status(400).send("User already exist.")
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-    const newAdmin = new Admin({
-      username,
-      email,
-      password: hashedPassword,
-      role: "Pending",
-      isActive: false
-    })
-    await newAdmin.save()
-    res.status(201).json({ message: "Registration successful! Awaiting role assignment by super admin." })
-
-  } catch (error) {
-    console.error("Error registering user: ", error);
-    res.status(500).send("An error occurred while registering the user.");
-  }
-}
+// CreateSuperAdmin();
 
 exports.CreateAdmin = async (req, res) => {
   const { username, email, password, role } = req.body;
   try {
     if (req.user.role !== 'SuperAdmin') {
-      return res.status(403).send('Access denied. Only Super Admin can do this action.');
+      return res.status(403).send('Access denied. Only Super Admin can do this action.'); 
     }
 
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).send("User already exists.");
     }
-
+    if (!password) {
+      return res.status(400).send("Password is required.");
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newAdmin = new Admin({
       username,
@@ -126,6 +81,7 @@ exports.Login = async (req, res) => {
     res.status(500).send("An error occurred while logging admin user.");
   }
 }
+
 exports.ChangeAdminPassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   try {
@@ -150,49 +106,7 @@ exports.ChangeAdminPassword = async (req, res) => {
   }
 }
 
-exports.AssignRole = async (req, res) => {
-  const { adminId } = req.params
-  const { role } = req.body
 
-  const adminRole = ['Admin', 'Registrar']
-  try {
-    if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only super admins can perform this action.")
-    }
-    
-    if (!adminRole.includes(role)) {
-      return res.status(400).send("Invalid role assigned.")
-    }
-    const updatedAdmin = await Admin.findByIdAndUpdate(
-      adminId,
-      { role, isActive: true },
-      { new: true }
-    );
-
-    if (!updatedAdmin) {
-      return res.status(404).send("Admin not found")
-    }
-
-    res.status(200).json({ message: "Role assigned successfully!", admin: updatedAdmin });
-  } catch (error) {
-    console.error("Error assigning role: ", error);
-    res.status(500).send("An error occurred while assigning the role.");
-  }
-}
-
-exports.GetUsersInPending = async (req, res) => {
-  try {
-    if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only super admins can perform this action.")
-    }
-    const usersInPending = await Admin.find({ role: 'Pending' })
-    res.status(200).send({ UsersInPending: usersInPending })
-  } catch (error) {
-    console.error("Error getting usersInPending: ", error)
-    res.status(500).send("An error occurrd while fetching usersInPending.")
-  }
-
-}
 
 exports.GetAdmins = async (req, res) => {
   try {

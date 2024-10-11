@@ -4,20 +4,17 @@ const router = express.Router()
 const authenticateToken = require('../Middlewares/jwt_auth')
 
 const {
-  SignUp,
-  AssignRole,
   GetAdmins,
   Login,
-  LogInSuperAdmin,
-  GetUsersInPending,
-  GetRegistrars
+  GetRegistrars,
+  CreateAdmin,
+  ChangeAdminPassword
 } = require('../Controllers/AdminController')
 
-router.post('/loginSuperAdmin', LogInSuperAdmin)
-router.post('/signup', SignUp) // users other than SuperAdmin
-router.post('/login', Login)  // users other than SuperAdmin
-router.get('/getuserinpending', authenticateToken, GetUsersInPending)
-router.patch('/assignrole/:adminId', authenticateToken, AssignRole)
+
+router.post('/login', Login)  
+router.post('/createadmin', authenticateToken, CreateAdmin)
+router.patch('/changeadminpassword', ChangeAdminPassword)
 router.get('/getadmins', authenticateToken, GetAdmins)
 router.get('/getregistrars', authenticateToken, GetRegistrars)
 
