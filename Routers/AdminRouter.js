@@ -8,13 +8,13 @@ const {
   Login,
   GetRegistrars,
   CreateAdmin,
-  ChangeAdminPassword
+  ChangePassword
 } = require('../Controllers/AdminController')
 
 
 router.post('/login', Login)  
 router.post('/createadmin', authenticateToken, CreateAdmin)
-router.patch('/changeadminpassword', ChangeAdminPassword)
+router.patch('/changepassword', authenticateToken, ChangePassword)
 router.get('/getadmins', authenticateToken, GetAdmins)
 router.get('/getregistrars', authenticateToken, GetRegistrars)
 

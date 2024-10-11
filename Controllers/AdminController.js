@@ -31,12 +31,11 @@ const CreateSuperAdmin = async () => {
 // CreateSuperAdmin();
 
 exports.CreateAdmin = async (req, res) => {
+  if (req.user.role !== 'SuperAdmin') {
+    return res.status(403).send('Access denied. Only Super Admin can do this action.'); 
+  }
   const { username, email, password, role } = req.body;
   try {
-    if (req.user.role !== 'SuperAdmin') {
-      return res.status(403).send('Access denied. Only Super Admin can do this action.'); 
-    }
-
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).send("User already exists.");
@@ -70,7 +69,7 @@ exports.Login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, admin.password)
     if (isMatch) {
-      const adminInfo = { role: admin.role }
+      const adminInfo = { role: admin.role}
       const accessToken = jwt.sign(adminInfo, process.env.TOKEN_SECRET, { expiresIn: "60m" })
       return res.json({ message: `Welcome, ${admin.username}!`, accessToken, role: admin.role });
     } else {
@@ -82,14 +81,16 @@ exports.Login = async (req, res) => {
   }
 }
 
-exports.ChangeAdminPassword = async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
+exports.ChangePassword = async (req, res) => {
+  if (!['Admin','Registrar'].includes(req.user.role)){
+    return res.status(400).send('Access denied')
+  }
+  const { email, currentPassword, newPassword } = req.body;
   try {
-    const admin = await Admin.findById(req.user.id);
+    const admin = await Admin.findOne({email})
     if (!admin) {
       return res.status(404).send("Admin not found.");
     }
-
     const isMatch = await bcrypt.compare(currentPassword, admin.password);
     if (!isMatch) {
       return res.status(401).send("Current password is incorrect.");
@@ -109,10 +110,10 @@ exports.ChangeAdminPassword = async (req, res) => {
 
 
 exports.GetAdmins = async (req, res) => {
+  if(req.user.role !== "SuperAdmin"){
+    return res.status(403).send("Access denied. Only Super admins can perform this action.")
+  }
   try {
-    if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only Super admins can perform this action.")
-    }
     const admins = await Admin.find({ role: 'Admin' })
     res.status(200).send({ admins: admins })
   } catch (error) {
@@ -122,10 +123,10 @@ exports.GetAdmins = async (req, res) => {
 
 }
 exports.GetRegistrars = async (req, res) => {
+  if(req.user.role !== "SuperAdmin"){
+    return res.status(403).send("Access denied. Only super admins can perform this action.")
+  }
   try {
-    if(req.user.role !== "SuperAdmin"){
-      return res.status(403).send("Access denied. Only super admins can perform this action.")
-    }
     const registrar = await Admin.find({ role: 'Registrar' })
     res.status(200).send({ Registrar: registrar })
   } catch (error) {
