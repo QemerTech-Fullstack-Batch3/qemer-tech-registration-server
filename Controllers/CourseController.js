@@ -36,7 +36,7 @@ exports.CreateCourse = async (req, res) => {
       return res.status(400).send("End date must be after start date");
     }
 
-    // dayofweek check
+    //dayofweek check
     if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
       return res.status(400).send("At least one day of the week is required");
     }
@@ -44,7 +44,7 @@ exports.CreateCourse = async (req, res) => {
       return res.status(400).send("Invalid dayOfWeek value");
     }
 
-    // time
+    //time
     let formattedTime = time;
     if (time.length === 5) {
       formattedTime = time + ':00';
@@ -54,7 +54,7 @@ exports.CreateCourse = async (req, res) => {
       return res.status(400).send("Invalid time format");
     }
 
-    // day check 
+    //day check 
     const currentDate = new Date()
     let courseRegistrationStatusFormatted;
     if (currentDate > endDateEdit) {
@@ -141,7 +141,7 @@ exports.EditCourse = async (req, res) => {
       return res.status(400).send("End date must be after start date");
     }
 
-    // dayofweek check
+    //dayofweek check
     if (!Array.isArray(dayOfWeek) || dayOfWeek.length === 0) {
       return res.status(400).send("At least one day of the week is required");
     }
@@ -150,7 +150,7 @@ exports.EditCourse = async (req, res) => {
     }
 
   
-    // time
+    //time
     let formattedTime = time;
     if (time.length === 5) {
       formattedTime = time + ':00';

@@ -7,13 +7,10 @@ const {
   GetRegisters,
   GetStudentRegistrationInfo,
   DeleteRegistration,
-  DeleteRegistrationCollection
 } = require('../Controllers/RegistrationController')
 
 router.post('/registerforcourse', RegisterForCourse)
 router.get('/getregisters', authenticateToken, GetRegisters)
 router.get('/getregistrationinfo/:id', GetStudentRegistrationInfo)
 router.delete('/deleteregisters/:id', authenticateToken, DeleteRegistration)
-router.delete('/deleteregistrationcollection', authenticateToken, DeleteRegistrationCollection)
-
 module.exports = router 

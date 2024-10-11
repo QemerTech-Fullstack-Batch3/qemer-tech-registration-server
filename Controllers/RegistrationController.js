@@ -7,7 +7,7 @@ exports.RegisterForCourse = async (req, res) => {
   try {
     const {fullName, gender, phone, havePc, CityOfResidence, courseId} = req.body
 
-    // course check
+    //course check
     const course = await Course.findById(courseId)
     if(!course){
       return res.status(404).send("Course not found.")
@@ -16,7 +16,7 @@ exports.RegisterForCourse = async (req, res) => {
     if (course.learningMode === "InPerson" && currentRegistrations >= course.spotLimit) {
       return res.status(409).json({ message: "The course has reached its spot limit. No more students can register." });
     }
-    // student check
+    //student check
     const existingStudent = await Registration.findOne({
       courseId: courseId, 
       phone: phone

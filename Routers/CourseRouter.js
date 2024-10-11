@@ -7,9 +7,7 @@ const {
   GetCourses,
   GetCourseInfo,
   EditCourse,
-  DeleteCourse,
   UpdateCourseStatus,
-  DeleteCourseCollection,
 } = require('../Controllers/CourseController')
 const { route } = require('./RegistrationRouter')
 
@@ -18,7 +16,5 @@ router.get('/getcourses', GetCourses)
 router.get('/getspecificcourse/:id', GetCourseInfo)
 router.patch('/editcourse/:id', authenticateToken, EditCourse)
 router.patch('/updatestatus/:courseId', UpdateCourseStatus)
-// router.delete('/deletecourse/:id', DeleteCourse)
-router.delete('/deletecoursecollection', DeleteCourseCollection) 
 
 module.exports = router 

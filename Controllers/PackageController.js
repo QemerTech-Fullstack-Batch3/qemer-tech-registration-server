@@ -11,7 +11,7 @@ exports.CreatePackage = async (req, res) => {
     if (existingPackage) {
       return res.status(400).json({ message: 'A package with this name already exists' });
     }
-    // Verify all courses exist
+
     const coursesExist = await Course.find({ _id: { $in: courses } });
     if (coursesExist.length !== courses.length) {
       return res.status(400).json({ message: 'One or more courses do not exist' });
@@ -62,7 +62,6 @@ exports.UpdatePackage = async (req, res) => {
     const { packageName, description, courses } = req.body;
     
     if (courses) {
-      // Verify all courses exist
       const coursesExist = await Course.find({ _id: { $in: courses } });
       if (coursesExist.length !== courses.length) {
         return res.status(400).json({ message: 'One or more courses do not exist' });
