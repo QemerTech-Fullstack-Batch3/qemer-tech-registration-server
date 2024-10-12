@@ -38,7 +38,7 @@ exports.RegisterForCourse = async (req, res) => {
 
     if(course.learningMode === "InPerson") {
       try {
-        await axios.patch(`http://localhost:5000/course/updateStatus/${courseId}`);
+        await axios.patch(`https://incredible-beignet-708e03.netlify.app/${courseId}`);
       } catch (error) {
         console.error("Error in updating course status:", error.response ? error.response.data : error.message);
       }
