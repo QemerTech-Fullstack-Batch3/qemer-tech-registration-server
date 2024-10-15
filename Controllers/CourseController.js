@@ -169,18 +169,12 @@ exports.EditCourse = async (req, res) => {
 
     const currentDate = new Date()
     let courseRegistrationStatusFormatted;
-    let currentRegistrationStatus = await course.courseRegistrationStatus
-
-    if (courseRegistrationStatus && courseRegistrationStatus !== currentRegistrationStatus) {
-      courseRegistrationStatusFormatted = courseRegistrationStatus; 
+    if (currentDate > endDateEdit) {
+      courseRegistrationStatusFormatted = 'Ended'
+    } else if (currentDate >= startDateEdit) {
+      courseRegistrationStatusFormatted = 'On Progress'
     } else {
-      if (currentDate > endDateEdit) {
-        courseRegistrationStatusFormatted = 'Ended';
-      } else if (currentDate >= startDateEdit) {
-        courseRegistrationStatusFormatted = 'On Progress';
-      } else {
-        courseRegistrationStatusFormatted = 'On Registration';
-      }
+      courseRegistrationStatusFormatted = 'On Registration'
     }
 
     const courseStatus = courseRegistrationStatusFormatted === "Ended" ? "InActive" : "Active";
