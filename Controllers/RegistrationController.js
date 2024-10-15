@@ -38,7 +38,7 @@ exports.RegisterForCourse = async (req, res) => {
 
     if(course.learningMode === "InPerson") {
       try {
-        await axios.patch(`https://qemer-tech-registration-server.onrender.com/${courseId}`);
+        await axios.patch(`http://localhost:5000/${courseId}`);
       } catch (error) {
         console.error("Error in updating course status:", error.response ? error.response.data : error.message);
       }
