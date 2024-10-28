@@ -62,7 +62,7 @@ exports.RegisterForCourse = async (req, res) => {
 
 exports.GetRegisters = async (req, res) => {
   try {
-    if (!["Admin","SuperAdmin"].includes(req.user.role)){
+    if (!["Registrar", "Admin","SuperAdmin"].includes(req.user.role)){
       return res.status(403).send('Access denied. Only admins can perform this action.')
     }
     const registers = await Registration.find()
