@@ -105,7 +105,7 @@ exports.GetCourseInfo = async (req, res) => {
     }
 
     const formattedCourse = {
-      ...course.toObject(),
+      ...course.toObject(), 
       startDate: formatDate(course.startDate),
       endDate: formatDate(course.endDate),
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
