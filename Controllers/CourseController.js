@@ -1,6 +1,6 @@
 const Course = require('../Models/CourseModel')
 const Registration = require('../Models/RegistrationModel');
-
+const {redisClient} = require('../Middlewares/caching')
 const daysOfWeekMap = {
   1: 'Monday',
   2: 'Tuesday',
@@ -99,6 +99,8 @@ exports.GetCourseInfo = async (req, res) => {
   try {
     const courseId = req.params.id
     const course = await Course.findById(courseId)
+
+    redisClient.setEx(courseId, 300, JSON.stringify(course)); 
 
     if (!course) {
       return res.status(404).send("Course not found.")
