@@ -16,7 +16,7 @@ morgan.token('param', (req, res, param) => {
   return req.params[param]
 })
 app.use(morgan(':method :host :status :param[id] :res[content-length] - :response-time ms'));
-// app.use(compression())
+app.use(compression())
 
 app.use(express.json())
 app.use(express.json({extended: false}))
