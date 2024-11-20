@@ -73,9 +73,10 @@ exports.CreateCourse = async (req, res, next) => {
 
     res.status(201).send({ course: savedCourse })
   } catch (err) {
-    console.error("Error creating course:", err)
+    console.log(`\nError handling from API
+      msg: Error Creating Course
+      `)
     next(err)
-    // res.status(500).send("An error occurred while creating a course")
   }
 }
 
@@ -91,9 +92,10 @@ exports.GetCourses = async (req, res, next) => {
     }))
     res.status(200).send(formattedCourses)
   } catch (err) {
-    console.error('Error fetching courses:', err)
+    console.log(`\nError handling from API
+      msg: Error fetching courses
+      `)
     next(err)
-    // res.status(501).send(error)
   }
 }
 
@@ -110,14 +112,15 @@ exports.GetCourseInfo = async (req, res, next) => {
       ...course.toObject(),
       startDate: formatDate(course.startDate),
       endDate: formatDate(course.endDate),
-      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+      dayOfWeek: course.dayOfWee.map((dayNumber) => daysOfWeekMap[dayNumber])
     }
 
     res.status(200).send({ course: formattedCourse })
   } catch (err) {
-    console.error('Error while fetching a specific course:', err)
+    console.log(`\nError handling from API
+      msg: Error fetching Course detail
+      `)
     next(err)
-    // res.status(501).send("An error occured while getting a specific course info")
   }
 }
 
@@ -191,9 +194,10 @@ exports.EditCourse = async (req, res, next) => {
 
     res.status(200).send(updatedCourse)
   } catch (err) {
-    console.error("Error while updating a course: ", err)
+    console.log(`\nError handling from API
+      msg: Error Updating a Course
+      `)
     next(err)
-    // res.status(500).send("An error occurred updating a course")
   }
 }
 
@@ -220,9 +224,10 @@ exports.UpdateCourseStatus = async (req, res) => {
       return res.send("Course status updated to On Registration");
     }
   } catch (err) {
-    console.error("Error while updating course status", err);
-    next(err)
-    // res.status(500).send("An error occurred updating a course status");
+    console.log(`\nError handling from API
+      msg: Error while updating course status
+      `)
+    next(err)  
   }
 };
 
