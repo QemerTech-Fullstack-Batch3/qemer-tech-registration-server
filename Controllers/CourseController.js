@@ -18,7 +18,7 @@ const formatDate = (date) => {
   });
 };
 
-exports.CreateCourse = async (req, res) => {
+exports.CreateCourse = async (req, res, next) => {
   try {
     if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send("Access denied. Only super admins can perform this action.")
@@ -72,9 +72,10 @@ exports.CreateCourse = async (req, res) => {
     const savedCourse = await newCourse.save()
 
     res.status(201).send({ course: savedCourse })
-  } catch (error) {
-    console.error("Error creating course:", error)
-    res.status(500).send("An error occurred while creating a course")
+  } catch (err) {
+    console.error("Error creating course:", err)
+    next(err)
+    // res.status(500).send("An error occurred while creating a course")
   }
 }
 
@@ -89,9 +90,10 @@ exports.GetCourses = async (req, res) => {
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
     }))
     res.status(200).send(formattedCourses)
-  } catch (error) {
-    console.error('Error fetching courses:', error)
-    res.status(501).send(error)
+  } catch (err) {
+    console.error('Error fetching courses:', err)
+    next(err)
+    // res.status(501).send(error)
   }
 }
 
@@ -112,9 +114,10 @@ exports.GetCourseInfo = async (req, res) => {
     }
 
     res.status(200).send({ course: formattedCourse })
-  } catch (error) {
-    console.error('Error while fetching a specific course:', error)
-    res.status(501).send("An error occured while getting a specific course info")
+  } catch (err) {
+    console.error('Error while fetching a specific course:', err)
+    next(err)
+    // res.status(501).send("An error occured while getting a specific course info")
   }
 }
 
@@ -187,9 +190,10 @@ exports.EditCourse = async (req, res) => {
     )
 
     res.status(200).send(updatedCourse)
-  } catch (error) {
-    console.error("Error while updating a course: ", error)
-    res.status(500).send("An error occurred updating a course")
+  } catch (err) {
+    console.error("Error while updating a course: ", err)
+    next(err)
+    // res.status(500).send("An error occurred updating a course")
   }
 }
 
@@ -215,9 +219,10 @@ exports.UpdateCourseStatus = async (req, res) => {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "On Registration" }, { new: true });
       return res.send("Course status updated to On Registration");
     }
-  } catch (error) {
-    console.error("Error while updating course status", error);
-    res.status(500).send("An error occurred updating a course status");
+  } catch (err) {
+    console.error("Error while updating course status", err);
+    next(err)
+    // res.status(500).send("An error occurred updating a course status");
   }
 };
 
@@ -225,7 +230,7 @@ exports.DeleteCourseCollection = async (req, res) => {
   try {
     await Course.deleteMany();
     res.status(200).send("Course collection deleted Succesfully.")
-  } catch (error) {
+  } catch (err) {
     console.error("Error while deleting course collection")
     res.status(501).send("An error occured while deleting course collection.")
   }
