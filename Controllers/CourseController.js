@@ -80,7 +80,7 @@ exports.CreateCourse = async (req, res, next) => {
 }
 
 
-exports.GetCourses = async (req, res) => {
+exports.GetCourses = async (req, res, next) => {
   try {
     const courses = await Course.find()
     const formattedCourses = courses.map((course) => ({
@@ -97,7 +97,7 @@ exports.GetCourses = async (req, res) => {
   }
 }
 
-exports.GetCourseInfo = async (req, res) => {
+exports.GetCourseInfo = async (req, res, next) => {
   try {
     const courseId = req.params.id
     const course = await Course.findById(courseId)
@@ -121,7 +121,7 @@ exports.GetCourseInfo = async (req, res) => {
   }
 }
 
-exports.EditCourse = async (req, res) => {
+exports.EditCourse = async (req, res, next) => {
   try {
     if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')

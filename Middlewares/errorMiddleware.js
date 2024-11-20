@@ -4,6 +4,7 @@ const errorMiddleware = (err, req, res, next) => {
   // if (process.env.NODE_ENV === 'development') {
   //   errorMessage = err.message; // Provide more details in development
   // }
+  console.log('Error handling from middleware')
   res.status(err.status || 500).send(errorMessage);
 }
 module.exports = errorMiddleware
