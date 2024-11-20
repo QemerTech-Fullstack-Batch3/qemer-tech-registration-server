@@ -1,4 +1,4 @@
-const errorMiddleware = async (err, req, res, next) => {
+const errorMiddleware = (err, req, res, next) => {
   console.error(err.stack)
   let errorMessage = 'Internal Server Error';
   // if (process.env.NODE_ENV === 'development') {
@@ -6,3 +6,4 @@ const errorMiddleware = async (err, req, res, next) => {
   // }
   res.status(err.status || 500).send(errorMessage);
 }
+module.exports = errorMiddleware
