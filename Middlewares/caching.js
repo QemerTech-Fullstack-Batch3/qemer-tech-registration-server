@@ -1,18 +1,39 @@
 const redis = require('redis')
-const redisClient = redis.createClient()
+const {ClientClosedError} = require('redis')
+let redisClient;
 
-const CacheCourseDetail = async (req, res, next) => {
-  const courseId = req.params.id 
-  try {
-    const data = await redisClient.get(courseId)
-    if(data){
-      console.log("Serving from cache")
-      return res.json(JSON.parse(data))
-    }
-    next()
-  } catch (error) {
-    console.log(error)
-  }
+try {
+  redisClient = redis.createClient();
+  redisClient.on('error', (err) => {
+    console.error('Redis Client Error:', err);
+    // Handle connection errors gracefully (e.g., retry logic)
+  });
+} catch (error) {
+  console.error('Error creating Redis client:', error);
+  // Handle initial connection errors
 }
 
-module.exports = {redisClient, CacheCourseDetail}
+const CacheCourseDetail = async (req, res, next) => {
+  const courseId = req.params.id;
+
+  try {
+    const data = await redisClient.get(courseId);
+    if (data) {
+      console.log("Course detail from cache");
+      return res.json(JSON.parse(data));
+    }
+  } catch (error) {
+    if (error instanceof ClientClosedError) {
+      console.error('Redis client closed, bypassing cache...');
+    } else {
+      console.error('Error fetching data from cache:', error);
+    }
+  }
+
+  next();
+}
+
+module.exports = {
+  redisClient,
+  CacheCourseDetail,
+};
