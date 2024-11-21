@@ -1,6 +1,9 @@
 const Course = require('../Models/CourseModel')
 const Registration = require('../Models/RegistrationModel');
-const {redisClient} = require('../Middlewares/caching')
+// const {redisClient} = require('../Middlewares/caching')
+const redis = require('redis')
+const redisClient = redis.createClient()
+const DEFAULT_EXPIRATION = 3600
 const daysOfWeekMap = {
   1: 'Monday',
   2: 'Tuesday',
@@ -88,10 +91,11 @@ exports.GetCourses = async (req, res) => {
       endDate: formatDate(course.endDate),
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
     }))
+    redisClient.setEx('formattedCourses', DEFAULT_EXPIRATION, JSON.stringify(formattedCourses))
     res.status(200).send(formattedCourses)
   } catch (error) {
     console.error('Error fetching courses:', error)
-    res.status(501).send(error)
+    res.status(501).send(error) 
   }
 }
 

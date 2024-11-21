@@ -3,7 +3,7 @@ const {ClientClosedError} = require('redis')
 let redisClient;
 
 try {
-  redisClient = redis.createClient();
+  redisClient = redis.createClient(6379);
   redisClient.on('error', (err) => {
     console.error('Redis Client Error:', err);
     // Handle connection errors gracefully (e.g., retry logic)
@@ -13,7 +13,7 @@ try {
   // Handle initial connection errors
 }
 
-const CacheCourseDetail = async (req, res, next) => {
+const CacheCourseDetail = async (req, res, next) => { 
   const courseId = req.params.id;
 
   try {
