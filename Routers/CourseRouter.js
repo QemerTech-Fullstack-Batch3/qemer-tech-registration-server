@@ -15,7 +15,7 @@ const {
 } = require('../Middlewares/caching')
 
 const { route } = require('./RegistrationRouter')
-
+  
 router.post('/createcourse', authenticateToken, CreateCourse)
 router.get('/getcourses', GetCourses)
 router.get('/getspecificcourse/:id', CacheCourseDetail, GetCourseInfo)

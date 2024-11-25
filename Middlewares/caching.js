@@ -29,7 +29,6 @@ const CacheCourseDetail = async (req, res, next) => {
       console.error('Error fetching data from cache:', error);
     }
   }
-
   next();
 }
 
