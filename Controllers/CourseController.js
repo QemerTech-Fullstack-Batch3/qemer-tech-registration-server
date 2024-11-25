@@ -1,9 +1,7 @@
 const Course = require('../Models/CourseModel')
 const Registration = require('../Models/RegistrationModel');
-// const {redisClient} = require('../Middlewares/caching')
-const redis = require('redis')
-const redisClient = redis.createClient()
-const DEFAULT_EXPIRATION = 3600
+const {redisClient} = require('../Middlewares/caching')
+
 const daysOfWeekMap = {
   1: 'Monday',
   2: 'Tuesday',
@@ -91,7 +89,9 @@ exports.GetCourses = async (req, res) => {
       endDate: formatDate(course.endDate),
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
     }))
-    redisClient.setEx('formattedCourses', DEFAULT_EXPIRATION, JSON.stringify(formattedCourses))
+    if (redisClient.isOpen) {
+      await redisClient.setEx('formattedCourses', 3600, JSON.stringify(formattedCourses));
+    }
     res.status(200).send(formattedCourses)
   } catch (error) {
     console.error('Error fetching courses:', error)
@@ -101,29 +101,32 @@ exports.GetCourses = async (req, res) => {
 
 exports.GetCourseInfo = async (req, res) => {
   try {
-    const courseId = req.params.id
-    const course = await Course.findById(courseId)
+      const courseId = req.params.id;
+      const course = await Course.findById(courseId);
 
-    redisClient.setEx(courseId, 300, JSON.stringify(course)); 
+      if (!course) {
+          return res.status(404).send("Course not found.");
+      }
 
-    if (!course) {
-      return res.status(404).send("Course not found.")
-    }
+      const formattedCourse = {
+          ...course.toObject(),
+          startDate: formatDate(course.startDate),
+          endDate: formatDate(course.endDate),
+          dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+      };
 
-    const formattedCourse = { 
-      ...course.toObject(), 
-      startDate: formatDate(course.startDate),
-      endDate: formatDate(course.endDate),
-      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
-    }
+      // Only cache if Redis is connected
+      if (redisClient.isOpen) {
+          await redisClient.setEx(courseId, 300, JSON.stringify(formattedCourse));
+      }
 
-    res.status(200).send({
-      message: 'Course detail from server', 
-      course: formattedCourse 
-    })
+      res.status(200).send({
+          message: 'Course detail from server',
+          course: formattedCourse
+      });
   } catch (error) {
-    console.error('Error while fetching a specific course:', error)
-    res.status(501).send("An error occured while getting a specific course info")
+      console.error('Error while fetching a specific course:', error);
+      res.status(501).send("An error occurred while getting a specific course info");
   }
 }
 

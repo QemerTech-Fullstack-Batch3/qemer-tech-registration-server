@@ -11,13 +11,14 @@ const {
 } = require('../Controllers/CourseController')
 
 const {
-  CacheCourseDetail
+  CacheCourseDetail,
+  CacheAllCourses
 } = require('../Middlewares/caching')
 
 const { route } = require('./RegistrationRouter')
   
 router.post('/createcourse', authenticateToken, CreateCourse)
-router.get('/getcourses', GetCourses)
+router.get('/getcourses', CacheAllCourses, GetCourses)
 router.get('/getspecificcourse/:id', CacheCourseDetail, GetCourseInfo)
 router.patch('/editcourse/:id', authenticateToken, EditCourse)
 router.patch('/updatestatus/:courseId', UpdateCourseStatus)

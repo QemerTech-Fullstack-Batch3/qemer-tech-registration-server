@@ -25,7 +25,7 @@ GET http://localhost:5000/course/getcourses
 
 ###
 
-GET http://localhost:5000/course/getspecificcourse/66fc2d79c89101d5ba27b06c
+GET http://localhost:5000/course/getspecificcourse/6705a6a3791b81eba83dc586
 
 ###
 PATCH http://localhost:5000/course/editcourse/66eaa3212a2a98b8f5aa30c3
