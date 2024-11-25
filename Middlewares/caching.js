@@ -113,18 +113,39 @@ const CachePackage = async (req, res, next) => {
   }
 }
 
-const CacheAllRegisters = async (req, res) => {
+const CacheAllRegisters = async (req, res, next) => {
   try {
-    
+    if(!redisClient.isOpen){
+      console.log('Redis cache is disconnected, bypassing cahce...')
+      return next()
+    }
+
+    const data = await redisClient.get('registers')
+    if(data){
+      console.log('Registers from cache')
+      return res.json(JSON.parse(data))
+    }
+    next()
   } catch (error) {
     console.error('Cache error:', error)
     next()
   }
 }
 
-const CacheRegistrationDetail = async (req, res) => {
+const CacheRegistrationDetail = async (req, res, next) => {
+  const registrationId = req.params.id
   try {
-    
+    if(!redisClient.isOpen){
+      console.log('Redis cache is not connected, bypassing cahce...')
+      return next()
+    }
+
+    const data = await redisClient.get(registrationId)
+    if(data){
+      console.log('Registration detail from cache')
+      return res.json(JSON.parse(data))
+    }
+    next()
   } catch (error) {
     console.error('Cache error:', error)
     next()

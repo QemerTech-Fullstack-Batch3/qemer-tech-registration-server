@@ -9,8 +9,13 @@ const {
   DeleteRegistration,
 } = require('../Controllers/RegistrationController')
 
+const {
+  CacheAllRegisters,
+  CacheRegistrationDetail
+} = require('../Middlewares/caching')
+
 router.post('/registerforcourse', RegisterForCourse)
-router.get('/getregisters', authenticateToken, GetRegisters)
-router.get('/getregistrationinfo/:id', GetStudentRegistrationInfo)
+router.get('/getregisters', authenticateToken, CacheAllRegisters, GetRegisters)
+router.get('/getregistrationinfo/:id', CacheRegistrationDetail,GetStudentRegistrationInfo)
 router.delete('/deleteregisters/:id', authenticateToken, DeleteRegistration)
 module.exports = router 
