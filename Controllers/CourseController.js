@@ -1,5 +1,6 @@
 const Course = require('../Models/CourseModel')
 const Registration = require('../Models/RegistrationModel');
+const { redisClient } = require('../Middlewares/caching')
 
 const daysOfWeekMap = {
   1: 'Monday',
@@ -90,7 +91,13 @@ exports.GetCourses = async (req, res, next) => {
       endDate: formatDate(course.endDate),
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
     }))
-    res.status(200).send(formattedCourses)
+    if (redisClient.isOpen) {
+      await redisClient.setEx('formattedCourses', 3600, JSON.stringify(formattedCourses));
+    }
+    res.status(200).send({
+      message: 'Courses from server',
+      course: formattedCourses
+    });
   } catch (err) {
     console.log(`\nError handling from API
       msg: Error fetching courses
@@ -101,21 +108,29 @@ exports.GetCourses = async (req, res, next) => {
 
 exports.GetCourseInfo = async (req, res, next) => {
   try {
-    const courseId = req.params.id
-    const course = await Course.findById(courseId)
+    const courseId = req.params.id;
+    const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).send("Course not found.")
+      return res.status(404).send("Course not found.");
     }
 
     const formattedCourse = {
       ...course.toObject(),
       startDate: formatDate(course.startDate),
       endDate: formatDate(course.endDate),
-      dayOfWeek: course.dayOfWee.map((dayNumber) => daysOfWeekMap[dayNumber])
+      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+    };
+
+    // Only cache if Redis is connected
+    if (redisClient.isOpen) {
+      await redisClient.setEx(courseId, 300, JSON.stringify(formattedCourse));
     }
 
-    res.status(200).send({ course: formattedCourse })
+    res.status(200).send({
+      message: 'Course detail from server',
+      course: formattedCourse
+    });
   } catch (err) {
     console.log(`\nError handling from API
       msg: Error fetching Course detail
@@ -155,7 +170,7 @@ exports.EditCourse = async (req, res, next) => {
       return res.status(400).send("Invalid dayOfWeek value");
     }
 
-  
+
     //time
     let formattedTime = time;
     if (time.length === 5) {
@@ -227,7 +242,7 @@ exports.UpdateCourseStatus = async (req, res) => {
     console.log(`\nError handling from API
       msg: Error while updating course status
       `)
-    next(err)  
+    next(err)
   }
 };
 

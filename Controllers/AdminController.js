@@ -64,7 +64,7 @@ exports.Login = async (req, res) => {
     const { email, password } = req.body
     const admin = await Admin.findOne({ email })
     if (!admin) {
-      return res.status(404).send("Incorrect email or password.")
+      return res.status(401).send("Incorrect email or password.")
     }
 
     const isMatch = await bcrypt.compare(password, admin.password)

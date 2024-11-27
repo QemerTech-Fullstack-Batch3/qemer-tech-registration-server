@@ -1,5 +1,6 @@
 const Package = require('../Models/PackageModel')
-const Course = require('../Models/CourseModel')
+const Course = require('../Models/CourseModel');
+const { redisClient } = require('../Middlewares/caching');
 
 exports.CreatePackage = async (req, res, next) => {
   try {
@@ -34,6 +35,9 @@ exports.CreatePackage = async (req, res, next) => {
 exports.GetAllPackages = async (req, res, next) => {
   try {
     const packages = await Package.find()
+    if(redisClient.isOpen){
+      redisClient.setEx('packages', 3600 , JSON.stringify(packages))
+    }
     res.json(packages)
   } catch (err) {
     next(err)
@@ -42,6 +46,10 @@ exports.GetAllPackages = async (req, res, next) => {
 exports.GetAllPackagesWithCourse = async (req, res, next) => {
   try {
     const populatedPackages = await Package.find().populate('courses', 'courseName')
+
+    if(redisClient.isOpen){
+      redisClient.setEx('populatedPackages', 3600, JSON.stringify(populatedPackages))
+    }
     res.json(populatedPackages)
   } catch (err) {
     next(err)
@@ -49,8 +57,13 @@ exports.GetAllPackagesWithCourse = async (req, res, next) => {
 }
 exports.GetPackageById = async (req, res, next) => {
   try {
-    const package = await Package.findById(req.params.id).populate('courses')
+    const packageId = req.params.id
+    const package = await Package.findById(packageId).populate('courses')
     if (!package) return res.status(404).json({ message: 'Package not found' })
+
+    if(redisClient.isOpen){
+      await redisClient.setEx(packageId, 300 , JSON.stringify(package))
+    }
     res.json(package)
   } catch (err) {
     next(err)

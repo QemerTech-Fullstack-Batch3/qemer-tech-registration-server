@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken')
 const axios = require('axios')
 const Registration = require('../Models/RegistrationModel')
 const Course = require('../Models/CourseModel')
-
+const { redisClient } = require('../Middlewares/caching')
+const { register } = require('module')
 exports.RegisterForCourse = async (req, res) => {
   try {
     const {fullName, gender, phone, havePc, CityOfResidence, courseId} = req.body
@@ -66,6 +67,10 @@ exports.GetRegisters = async (req, res) => {
       return res.status(403).send('Access denied. Only admins can perform this action.')
     }
     const registers = await Registration.find()
+
+    if(redisClient.isOpen){
+      await redisClient.setEx('registers', 3600, JSON.stringify(registers))
+    }
     res.status(200).send(registers)
   } catch (error) {
     console.error("Error fetching registrations: ", error)
@@ -80,6 +85,9 @@ exports.GetStudentRegistrationInfo = async (req, res) => {
     res.status(404).send("Registration not found")
   }
 
+  if(redisClient.isOpen){
+    await redisClient.setEx(registrationId, 300, JSON.stringify(registration))
+  }
   res.status(200).send(registration)
 }
 
