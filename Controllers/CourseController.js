@@ -18,7 +18,7 @@ const formatDate = (date) => {
   });
 };
 
-exports.CreateCourse = async (req, res) => {
+exports.CreateCourse = async (req, res, next) => {
   try {
     if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send("Access denied. Only super admins can perform this action.")
@@ -72,14 +72,16 @@ exports.CreateCourse = async (req, res) => {
     const savedCourse = await newCourse.save()
 
     res.status(201).send({ course: savedCourse })
-  } catch (error) {
-    console.error("Error creating course:", error)
-    res.status(500).send("An error occurred while creating a course")
+  } catch (err) {
+    console.log(`\nError handling from API
+      msg: Error Creating Course
+      `)
+    next(err)
   }
 }
 
 
-exports.GetCourses = async (req, res) => {
+exports.GetCourses = async (req, res, next) => {
   try {
     const courses = await Course.find()
     const formattedCourses = courses.map((course) => ({
@@ -89,13 +91,15 @@ exports.GetCourses = async (req, res) => {
       dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
     }))
     res.status(200).send(formattedCourses)
-  } catch (error) {
-    console.error('Error fetching courses:', error)
-    res.status(501).send(error)
+  } catch (err) {
+    console.log(`\nError handling from API
+      msg: Error fetching courses
+      `)
+    next(err)
   }
 }
 
-exports.GetCourseInfo = async (req, res) => {
+exports.GetCourseInfo = async (req, res, next) => {
   try {
     const courseId = req.params.id
     const course = await Course.findById(courseId)
@@ -108,17 +112,19 @@ exports.GetCourseInfo = async (req, res) => {
       ...course.toObject(),
       startDate: formatDate(course.startDate),
       endDate: formatDate(course.endDate),
-      dayOfWeek: course.dayOfWeek.map((dayNumber) => daysOfWeekMap[dayNumber])
+      dayOfWeek: course.dayOfWee.map((dayNumber) => daysOfWeekMap[dayNumber])
     }
 
     res.status(200).send({ course: formattedCourse })
-  } catch (error) {
-    console.error('Error while fetching a specific course:', error)
-    res.status(501).send("An error occured while getting a specific course info")
+  } catch (err) {
+    console.log(`\nError handling from API
+      msg: Error fetching Course detail
+      `)
+    next(err)
   }
 }
 
-exports.EditCourse = async (req, res) => {
+exports.EditCourse = async (req, res, next) => {
   try {
     if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
       return res.status(403).send('Access denied. Only Admins and SuperAdmin can perform this action.')
@@ -187,9 +193,11 @@ exports.EditCourse = async (req, res) => {
     )
 
     res.status(200).send(updatedCourse)
-  } catch (error) {
-    console.error("Error while updating a course: ", error)
-    res.status(500).send("An error occurred updating a course")
+  } catch (err) {
+    console.log(`\nError handling from API
+      msg: Error Updating a Course
+      `)
+    next(err)
   }
 }
 
@@ -215,9 +223,11 @@ exports.UpdateCourseStatus = async (req, res) => {
       await Course.findByIdAndUpdate(courseId, { courseRegistrationStatus: "On Registration" }, { new: true });
       return res.send("Course status updated to On Registration");
     }
-  } catch (error) {
-    console.error("Error while updating course status", error);
-    res.status(500).send("An error occurred updating a course status");
+  } catch (err) {
+    console.log(`\nError handling from API
+      msg: Error while updating course status
+      `)
+    next(err)  
   }
 };
 
@@ -225,7 +235,7 @@ exports.DeleteCourseCollection = async (req, res) => {
   try {
     await Course.deleteMany();
     res.status(200).send("Course collection deleted Succesfully.")
-  } catch (error) {
+  } catch (err) {
     console.error("Error while deleting course collection")
     res.status(501).send("An error occured while deleting course collection.")
   }

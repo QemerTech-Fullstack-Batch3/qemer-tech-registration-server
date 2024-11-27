@@ -1,7 +1,7 @@
 const Package = require('../Models/PackageModel')
 const Course = require('../Models/CourseModel')
 
-exports.CreatePackage = async (req, res) => {
+exports.CreatePackage = async (req, res, next) => {
   try {
     const { packageName, description, courses } = req.body;
     if (!packageName || !description || !courses) {
@@ -26,38 +26,37 @@ exports.CreatePackage = async (req, res) => {
     await newPackage.save();
     const populatedPackage = await Package.findById(newPackage._id).populate('courses');
     res.status(201).json(newPackage);
-  } catch (error) {
-    console.error('Error creating package:', error);
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    next(err)
   }
 };
 
-exports.GetAllPackages = async (req, res) => {
+exports.GetAllPackages = async (req, res, next) => {
   try {
     const packages = await Package.find()
     res.json(packages)
-  } catch (error) {
-    res.status(500).json({ message: error.message })
+  } catch (err) {
+    next(err)
   }
 }
-exports.GetAllPackagesWithCourse = async (req, res) => {
+exports.GetAllPackagesWithCourse = async (req, res, next) => {
   try {
     const populatedPackages = await Package.find().populate('courses', 'courseName')
     res.json(populatedPackages)
-  } catch (error) {
-    res.status(500).json({ message: error.message })
+  } catch (err) {
+    next(err)
   }
 }
-exports.GetPackageById = async (req, res) => {
+exports.GetPackageById = async (req, res, next) => {
   try {
     const package = await Package.findById(req.params.id).populate('courses')
     if (!package) return res.status(404).json({ message: 'Package not found' })
     res.json(package)
-  } catch (error) {
-    res.status(500).json({ message: error.message })
+  } catch (err) {
+    next(err)
   }
 }
-exports.UpdatePackage = async (req, res) => {
+exports.UpdatePackage = async (req, res, next) => {
   try {
     const { packageName, description, courses } = req.body;
     
@@ -76,20 +75,20 @@ exports.UpdatePackage = async (req, res) => {
 
     if (!updatedPackage) return res.status(404).json({ message: 'Package not found' });
     res.json(updatedPackage);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    next(err)
   }
 };
 
-exports.DeletePackage = async (req, res) => {
+exports.DeletePackage = async (req, res, next) => {
   try {
     const deletedPackage = await Package.findByIdAndDelete(req.params.id)
     if(!deletedPackage){
       return res.status(404).send('Package not found')
     }
     res.status(200).send('Package deleted succesfully')
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    next(err)
   }
 }
 
