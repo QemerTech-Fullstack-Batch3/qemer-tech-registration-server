@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const authenticateToken = require('../Middlewares/jwt_auth')
+const {checkPermission} = require('../Middlewares/rbacMiddleware')
 const {
   RegisterForCourse,
   GetRegisters,
@@ -10,7 +11,7 @@ const {
 } = require('../Controllers/RegistrationController')
 
 router.post('/registerforcourse', RegisterForCourse)
-router.get('/getregisters', authenticateToken, GetRegisters)
+router.get('/getregisters', checkPermission('read_record'), authenticateToken, GetRegisters)
 router.get('/getregistrationinfo/:id', GetStudentRegistrationInfo)
-router.delete('/deleteregisters/:id', authenticateToken, DeleteRegistration)
+router.delete('/deleteregisters/:id', authenticateToken, checkPermission('delete_record'), DeleteRegistration)
 module.exports = router 
