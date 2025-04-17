@@ -16,7 +16,7 @@ const {
 } = require('../Middlewares/caching')
 
 router.post('/registerforcourse', RegisterForCourse)
-router.get('/getregisters', checkPermission('read_record'), authenticateToken, CacheAllRegisters, GetRegisters)
-router.get('/getregistrationinfo/:id', CacheRegistrationDetail, GetStudentRegistrationInfo)
+router.get('/getregisters', checkPermission('read_record'), authenticateToken, GetRegisters)
+router.get('/getregistrationinfo/:id', GetStudentRegistrationInfo)
 router.delete('/deleteregisters/:id', authenticateToken, checkPermission('delete_record'), DeleteRegistration)
 module.exports = router 
