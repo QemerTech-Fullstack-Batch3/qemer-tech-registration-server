@@ -9,13 +9,13 @@ require("dotenv").config()
 const app = express()
 
 app.use(helmet())
-morgan.token('host', (req, res) => {
-  return req.hostname
-})
-morgan.token('param', (req, res, param) => {
-  return req.params[param]
-})
-app.use(morgan(':method :host :status :param[id] :res[content-length] - :response-time ms'));
+// morgan.token('host', (req, res) => {
+//   return req.hostname
+// })
+// morgan.token('param', (req, res, param) => {
+//   return req.params[param]
+// })
+// app.use(morgan(':method :host :status :param[id] :res[content-length] - :response-time ms'));
 app.use(compression())
 
 app.use(express.json())
