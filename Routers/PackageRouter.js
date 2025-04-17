@@ -18,11 +18,11 @@ const {
 //    CachePackage
 // } = require('../Middlewares/caching')
 
-router.post('/createpackage', authenticateToken, checkPermission('create_record'), CreatePackage, errorMiddleware)
-router.get('/getpackages', GetAllPackages, errorMiddleware)
-router.get('/getpackageswithcourses', GetAllPackagesWithCourse, errorMiddleware)
-router.get('/getpackage/:id', GetPackageById, errorMiddleware)
-router.patch('/updatepackage/:id', authenticateToken, checkPermission('update_record'), UpdatePackage, errorMiddleware)
-router.delete('/deletepackage/:id', authenticateToken, checkPermission('delete_record'), DeletePackage, errorMiddleware)
+router.post('/createpackage', authenticateToken, checkPermission('create_record'), CreatePackage)
+router.get('/getpackages', GetAllPackages)
+router.get('/getpackageswithcourses', GetAllPackagesWithCourse)
+router.get('/getpackage/:id', GetPackageById)
+router.patch('/updatepackage/:id', authenticateToken, checkPermission('update_record'), UpdatePackage)
+router.delete('/deletepackage/:id', authenticateToken, checkPermission('delete_record'), DeletePackage)
 
 module.exports = router

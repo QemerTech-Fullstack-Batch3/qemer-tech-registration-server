@@ -28,7 +28,8 @@ exports.CreatePackage = async (req, res, next) => {
     const populatedPackage = await Package.findById(newPackage._id).populate('courses');
     res.status(201).json(newPackage);
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred creating packages");
+    console.log(err)
   }
 };
 
@@ -40,7 +41,8 @@ exports.GetAllPackages = async (req, res, next) => {
     }
     res.json(packages)
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred fetching all packages");
+    console.log(err)
   }
 }
 exports.GetAllPackagesWithCourse = async (req, res, next) => {
@@ -52,7 +54,8 @@ exports.GetAllPackagesWithCourse = async (req, res, next) => {
     }
     res.json(populatedPackages)
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred fetching all packages with populated course");
+    console.log(err)
   }
 }
 exports.GetPackageById = async (req, res, next) => {
@@ -66,7 +69,8 @@ exports.GetPackageById = async (req, res, next) => {
     }
     res.json(package)
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred fetching package id");
+    console.log(err)
   }
 }
 exports.UpdatePackage = async (req, res, next) => {
@@ -89,7 +93,8 @@ exports.UpdatePackage = async (req, res, next) => {
     if (!updatedPackage) return res.status(404).json({ message: 'Package not found' });
     res.json(updatedPackage);
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred updating package");
+    console.log(err)
   }
 };
 
@@ -101,7 +106,8 @@ exports.DeletePackage = async (req, res, next) => {
     }
     res.status(200).send('Package deleted succesfully')
   } catch (err) {
-    next(err)
+    res.status(500).send("An error occurred deleting packages");
+    console.log(err)
   }
 }
 
