@@ -10,10 +10,10 @@ const {
   DeleteRegistration,
 } = require('../Controllers/RegistrationController')
 
-const {
-  CacheAllRegisters,
-  CacheRegistrationDetail
-} = require('../Middlewares/caching')
+// const {
+//   CacheAllRegisters,
+//   CacheRegistrationDetail
+// } = require('../Middlewares/caching')
 
 router.post('/registerforcourse', RegisterForCourse)
 router.get('/getregisters', checkPermission('read_record'), authenticateToken, GetRegisters)

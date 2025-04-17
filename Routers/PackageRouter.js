@@ -12,11 +12,11 @@ const {
    DeletePackage,
    GetAllPackagesWithCourse
 } = require('../Controllers/PackageController')
-const {
-   CacheAllPackages,
-   CacheAllPackagesWithCourse,
-   CachePackage
-} = require('../Middlewares/caching')
+// const {
+//    CacheAllPackages,
+//    CacheAllPackagesWithCourse,
+//    CachePackage
+// } = require('../Middlewares/caching')
 
 router.post('/createpackage', authenticateToken, checkPermission('create_record'), CreatePackage, errorMiddleware)
 router.get('/getpackages', GetAllPackages, errorMiddleware)

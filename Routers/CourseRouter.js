@@ -12,10 +12,10 @@ const {
   UpdateCourseStatus,
 } = require('../Controllers/CourseController')
 
-const {
-  CacheCourseDetail,
-  CacheAllCourses
-} = require('../Middlewares/caching')
+// const {
+//   CacheCourseDetail,
+//   CacheAllCourses
+// } = require('../Middlewares/caching')
 
 const { route } = require('./RegistrationRouter')
 
